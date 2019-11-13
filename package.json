@@ -61,6 +61,7 @@
     "rimraf": "3.0.0"
   },
   "dependencies": {
+    "dotenv": "^8.2.0",
     "graphql-yoga": "^1.18.3",
     "lodash": "^4.17.10"
   }
