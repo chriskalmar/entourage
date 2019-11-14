@@ -1,5 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga';
 import GraphQLJSON from 'graphql-type-json';
+import { runProfile } from './profile';
 
 const typeDefs = `
   scalar JSON
@@ -9,9 +10,9 @@ const typeDefs = `
   }
 
   type Mutation {
-    start(
+    runProfile(
       name: String!
-      template: String!
+      profile: String!
       params: JSON!
     ): JSON!
   }
@@ -22,7 +23,7 @@ const resolvers = {
     hello: (_, { name }) => `Hello ${name || 'World'}`,
   },
   Mutation: {
-    start: (_, all) => all,
+    runProfile: (_, { profile }) => runProfile(profile),
   },
   JSON: GraphQLJSON,
 };
