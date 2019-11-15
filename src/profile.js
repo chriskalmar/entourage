@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
+import { renderTemplate } from './template';
 
 export const runProfile = (profile, params) => {
   let profileFilename;
@@ -28,6 +29,12 @@ export const runProfile = (profile, params) => {
   const renderedProfile = renderFile(profileFilename, templateParams);
 
   const profileYaml = parseYaml(renderedProfile);
+
+  if (profileYaml.render_templates) {
+    profileYaml.render_templates.map(template => {
+      const renderedTemplate = renderTemplate(template, templateParams);
+    });
+  }
 
   return {};
 };
