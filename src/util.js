@@ -7,6 +7,22 @@ export const createWorkPathFolder = () => {
   }
 };
 
+export const checkVersionPathBreakout = version => {
+  const folderPath = path.normalize(
+    `${path.basename(process.env.WORK_PATH)}/${version}`,
+  );
+
+  if (
+    !folderPath.startsWith(path.normalize(path.basename(process.env.WORK_PATH)))
+  ) {
+    throw new Error(
+      `Version '${version}' needs to be a child of '${path.basename(
+        process.env.WORK_PATH,
+      )}}'`,
+    );
+  }
+};
+
 export const lockWorkVersionFolder = version => {
   const filename = `${path.basename(process.env.WORK_PATH)}/${version}/.lock`;
   fs.writeFileSync(filename, '', 'utf8');
