@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { renderFile } from './render';
+import { parseYaml } from './yaml';
 
 export const runProfile = (profile, params) => {
   let profileFilename;
@@ -25,6 +26,8 @@ export const runProfile = (profile, params) => {
   };
 
   const renderedProfile = renderFile(profileFilename, templateParams);
+
+  const profileYaml = parseYaml(renderedProfile);
 
   return {};
 };
