@@ -3,7 +3,7 @@ import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
-import { createWorkVersionFolder } from './util';
+import { createWorkVersionFolder, lockWorkVersionFolder } from './util';
 
 export const runProfile = (profile, params, version) => {
   let profileFilename;
@@ -55,6 +55,8 @@ export const runProfile = (profile, params, version) => {
       });
     }
   }
+
+  lockWorkVersionFolder(version);
 
   return {};
 };
