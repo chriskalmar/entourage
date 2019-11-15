@@ -33,14 +33,27 @@ export const runProfile = (profile, params, version) => {
 
   createWorkVersionFolder(version);
 
-  if (profileYaml.renderTemplates) {
-    profileYaml.renderTemplates.map(template => {
-      const renderedTemplate = renderTemplateToFile(
-        template,
-        templateParams,
-        version,
-      );
-    });
+  const { renderTemplates } = profileYaml;
+
+  if (renderTemplates) {
+    if (renderTemplates.files) {
+      renderTemplates.files.map(template => {
+        const templateFilename = renderTemplates.sourcePath
+          ? `${renderTemplates.sourcePath}/${template}`
+          : template;
+
+        const outputFilename = renderTemplates.targetPath
+          ? `${renderTemplates.targetPath}/${template}`
+          : template;
+
+        const renderedTemplate = renderTemplateToFile(
+          templateFilename,
+          templateParams,
+          version,
+          outputFilename,
+        );
+      });
+    }
   }
 
   return {};
