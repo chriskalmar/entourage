@@ -3,7 +3,7 @@ import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
-import { createWorkVersionFolder, lockWorkVersionFolder } from './util';
+import { createOrResetWorkVersionFolder, lockWorkVersionFolder } from './util';
 
 export const runProfile = (profile, params, version) => {
   let profileFilename;
@@ -31,7 +31,7 @@ export const runProfile = (profile, params, version) => {
   const renderedProfile = renderFile(profileFilename, templateParams);
   const profileYaml = parseYaml(renderedProfile);
 
-  createWorkVersionFolder(version);
+  createOrResetWorkVersionFolder(version);
 
   const { renderTemplates } = profileYaml;
 

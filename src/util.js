@@ -27,7 +27,15 @@ export const deleteWorkVersionFolder = version => {
   }
 };
 
-export const createWorkVersionFolder = version => {
+export const createOrResetWorkVersionFolder = version => {
+  checkVersionPathBreakout(version);
+
+  if (isWorkVersionFolderLocked(version)) {
+    throw new Error(`Version '${version}' is already in use`);
+  }
+
+  deleteWorkVersionFolder(version);
+
   const folderPath = `${path.basename(process.env.WORK_PATH)}/${version}`;
 
   if (!fs.existsSync(folderPath)) {
