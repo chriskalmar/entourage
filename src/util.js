@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import rimraf from 'rimraf';
 
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
@@ -39,7 +40,7 @@ export const deleteWorkVersionFolder = version => {
   const folderPath = `${path.basename(process.env.WORK_PATH)}/${version}`;
 
   if (fs.existsSync(folderPath)) {
-    // fs.rmdirSync(folderPath, { recursive: true });
+    rimraf.sync(folderPath);
   }
 };
 
