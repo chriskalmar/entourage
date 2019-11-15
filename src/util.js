@@ -7,8 +7,8 @@ export const createWorkPathFolder = () => {
   }
 };
 
-export const createNamedWorkFolder = name => {
-  const folderPath = `${path.basename(process.env.WORK_PATH)}/${name}`;
+export const createWorkVersionFolder = version => {
+  const folderPath = `${path.basename(process.env.WORK_PATH)}/${version}`;
 
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true });

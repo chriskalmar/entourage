@@ -15,12 +15,12 @@ export const renderTemplate = (template, templateParams) => {
 export const renderTemplateToFile = (
   template,
   templateParams,
-  name = 'default',
+  version = 'default',
 ) => {
-  const renderedTemplate = renderTemplate(template, templateParams, name);
+  const renderedTemplate = renderTemplate(template, templateParams, version);
   const filename = `${path.basename(
     process.env.WORK_PATH,
-  )}/${name}/${template}`;
+  )}/${version}/${template}`;
 
   if (!fs.existsSync(path.dirname(filename))) {
     fs.mkdirSync(path.dirname(filename), { recursive: true });

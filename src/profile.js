@@ -3,9 +3,9 @@ import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
-import { createNamedWorkFolder } from './util';
+import { createWorkVersionFolder } from './util';
 
-export const runProfile = (profile, params, name) => {
+export const runProfile = (profile, params, version) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {
@@ -24,21 +24,21 @@ export const runProfile = (profile, params, name) => {
 
   const templateParams = {
     ...params,
-    __NAME: name,
+    __VERSION: version,
     __PROFILE: profile,
   };
 
   const renderedProfile = renderFile(profileFilename, templateParams);
   const profileYaml = parseYaml(renderedProfile);
 
-  createNamedWorkFolder(name);
+  createWorkVersionFolder(version);
 
   if (profileYaml.renderTemplates) {
     profileYaml.renderTemplates.map(template => {
       const renderedTemplate = renderTemplateToFile(
         template,
         templateParams,
-        name,
+        version,
       );
     });
   }

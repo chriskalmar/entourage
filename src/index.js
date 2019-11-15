@@ -12,7 +12,7 @@ const typeDefs = `
 
   type Mutation {
     runProfile(
-      name: String!
+      version: String!
       profile: String!
       params: JSON!
     ): JSON!
@@ -24,8 +24,8 @@ const resolvers = {
     hello: (_, { name }) => `Hello ${name || 'World'}`,
   },
   Mutation: {
-    runProfile: (_, { profile, params, name }) =>
-      runProfile(profile, params, name),
+    runProfile: (_, { profile, params, version }) =>
+      runProfile(profile, params, version),
   },
   JSON: GraphQLJSON,
 };
