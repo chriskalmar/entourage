@@ -6,3 +6,11 @@ export const createWorkPathFolder = () => {
     fs.mkdirSync(path.basename(process.env.WORK_PATH), { recursive: true });
   }
 };
+
+export const createNamedWorkFolder = name => {
+  const folderPath = `${path.basename(process.env.WORK_PATH)}/${name}`;
+
+  if (!fs.existsSync(folderPath)) {
+    fs.mkdirSync(folderPath, { recursive: true });
+  }
+};

@@ -2,7 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
-import { renderTemplate, renderTemplateToFile } from './template';
+import { renderTemplateToFile } from './template';
+import { createNamedWorkFolder } from './util';
 
 export const runProfile = (profile, params, name) => {
   let profileFilename;
@@ -28,8 +29,9 @@ export const runProfile = (profile, params, name) => {
   };
 
   const renderedProfile = renderFile(profileFilename, templateParams);
-
   const profileYaml = parseYaml(renderedProfile);
+
+  createNamedWorkFolder(name);
 
   if (profileYaml.render_templates) {
     profileYaml.render_templates.map(template => {
