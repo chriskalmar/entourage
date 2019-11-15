@@ -17,10 +17,6 @@ export const renderTemplateToFile = (
   templateParams,
   name = 'default',
 ) => {
-  if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
-    fs.mkdirSync(path.basename(process.env.WORK_PATH), { recursive: true });
-  }
-
   const renderedTemplate = renderTemplate(template, templateParams, name);
   const filename = `${path.basename(
     process.env.WORK_PATH,
