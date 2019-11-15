@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { renderFile } from './render';
 
-export const runProfile = profile => {
+export const runProfile = (profile, params) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {
@@ -19,9 +19,12 @@ export const runProfile = profile => {
     throw new Error(`Profile '${profile}' not found`);
   }
 
-  renderFile(profileFilename, {
+  const templateParams = {
+    ...params,
     __PROFILE: profile,
-  });
+  };
+
+  const renderedProfile = renderFile(profileFilename, templateParams);
 
   return {};
 };
