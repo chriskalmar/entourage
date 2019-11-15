@@ -33,8 +33,8 @@ export const runProfile = (profile, params, name) => {
 
   createNamedWorkFolder(name);
 
-  if (profileYaml.render_templates) {
-    profileYaml.render_templates.map(template => {
+  if (profileYaml.renderTemplates) {
+    profileYaml.renderTemplates.map(template => {
       const renderedTemplate = renderTemplateToFile(
         template,
         templateParams,
