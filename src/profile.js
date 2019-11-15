@@ -2,9 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
-import { renderTemplate } from './template';
+import { renderTemplate, renderTemplateToFile } from './template';
 
-export const runProfile = (profile, params) => {
+export const runProfile = (profile, params, name) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {
@@ -23,6 +23,7 @@ export const runProfile = (profile, params) => {
 
   const templateParams = {
     ...params,
+    __NAME: name,
     __PROFILE: profile,
   };
 
@@ -32,7 +33,11 @@ export const runProfile = (profile, params) => {
 
   if (profileYaml.render_templates) {
     profileYaml.render_templates.map(template => {
-      const renderedTemplate = renderTemplate(template, templateParams);
+      const renderedTemplate = renderTemplateToFile(
+        template,
+        templateParams,
+        name,
+      );
     });
   }
 

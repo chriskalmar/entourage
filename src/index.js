@@ -23,7 +23,8 @@ const resolvers = {
     hello: (_, { name }) => `Hello ${name || 'World'}`,
   },
   Mutation: {
-    runProfile: (_, { profile, params }) => runProfile(profile, params),
+    runProfile: (_, { profile, params, name }) =>
+      runProfile(profile, params, name),
   },
   JSON: GraphQLJSON,
 };
