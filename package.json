@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "dotenv": "^8.2.0",
+    "execa": "^3.3.0",
     "graphql-type-json": "^0.3.0",
     "graphql-yoga": "^1.18.3",
     "js-yaml": "^3.13.1",
