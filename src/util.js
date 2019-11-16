@@ -59,3 +59,7 @@ export const createOrResetWorkVersionFolder = version => {
     fs.mkdirSync(folderPath, { recursive: true });
   }
 };
+
+export const printTask = task => console.log(`\n\n[ ${task} ]`);
+
+export const log = msg => console.log(msg);

@@ -3,7 +3,12 @@ import path from 'path';
 import { renderFile } from './render';
 import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
-import { createOrResetWorkVersionFolder, lockWorkVersionFolder } from './util';
+import {
+  createOrResetWorkVersionFolder,
+  lockWorkVersionFolder,
+  printTask,
+  log,
+} from './util';
 import { executeScript } from './script';
 
 export const runProfile = async (profile, params, version) => {
@@ -34,9 +39,11 @@ export const runProfile = async (profile, params, version) => {
 
   createOrResetWorkVersionFolder(version);
 
-  const { renderTemplates, beforeScript } = profileYaml;
+  const { renderTemplates, beforeScript, script } = profileYaml;
 
   if (renderTemplates) {
+    printTask('Rendering templates');
+
     if (renderTemplates.files) {
       renderTemplates.files.map(template => {
         const templateFilename = renderTemplates.sourcePath
@@ -53,12 +60,17 @@ export const runProfile = async (profile, params, version) => {
           version,
           outputFilename,
         );
+
+        log(`✔ ${template}`);
       });
     }
   }
 
   if (beforeScript) {
+    printTask(`Executing 'beforeScript'`);
+
     for (const command of beforeScript) {
+      log(`\n${command}\n`);
       await executeScript(version, command, templateParams);
     }
   }
