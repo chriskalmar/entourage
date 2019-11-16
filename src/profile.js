@@ -4,8 +4,9 @@ import { renderFile } from './render';
 import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
 import { createOrResetWorkVersionFolder, lockWorkVersionFolder } from './util';
+import { executeScript } from './script';
 
-export const runProfile = (profile, params, version) => {
+export const runProfile = async (profile, params, version) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {
@@ -33,7 +34,7 @@ export const runProfile = (profile, params, version) => {
 
   createOrResetWorkVersionFolder(version);
 
-  const { renderTemplates } = profileYaml;
+  const { renderTemplates, beforeScript } = profileYaml;
 
   if (renderTemplates) {
     if (renderTemplates.files) {
@@ -56,7 +57,11 @@ export const runProfile = (profile, params, version) => {
     }
   }
 
-  lockWorkVersionFolder(version);
+  if (beforeScript) {
+    for (const command of beforeScript) {
+      await executeScript(version, command, templateParams);
+    }
+  }
 
   return {};
 };
