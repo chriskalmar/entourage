@@ -75,5 +75,16 @@ export const runProfile = async (profile, params, version) => {
     }
   }
 
+  if (script) {
+    printTask(`Executing 'script'`);
+
+    for (const command of script) {
+      log(`\n${command}\n`);
+      await executeScript(version, command, templateParams);
+    }
+  }
+
+  // lockWorkVersionFolder(version);
+
   return {};
 };
