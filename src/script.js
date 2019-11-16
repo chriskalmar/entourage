@@ -8,18 +8,17 @@ export const executeScript = async (version, script, params) => {
   );
 
   try {
-    const { stdout } = await execa('sh', ['-c', script], {
+    const subprocess = execa('sh', ['-c', script], {
       cwd,
       env: params,
     });
 
-    console.log(stdout);
+    subprocess.stdout.pipe(process.stdout);
+    subprocess.stderr.pipe(process.stderr);
+
+    const { stdout } = await subprocess;
   } catch (error) {
-    const { stdout, stderr } = error;
-
-    console.log(stdout);
-    console.log(stderr);
-
+    const { stderr } = error;
     throw new Error(stderr);
   }
 };
