@@ -2,6 +2,7 @@ import * as compose from 'docker-compose';
 import fs from 'fs';
 import { getWorkVersionFolder, getRandomPorts } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
+import { Docker, Options } from 'docker-cli-js';
 
 export const checkDockerComposeFileExists = async filePath => {
   if (!fs.existsSync(filePath)) {
@@ -116,5 +117,19 @@ export const runDockerComposeFile = async (version, config) => {
     });
   } catch (error) {
     throw new Error(error.err);
+  }
+};
+
+export const createDockerNetwork = async () => {
+  const docker = new Docker({});
+
+  const { network: networks } = await docker.command('network ls');
+
+  const found = networks.find(({ name }) => name === process.env.NETWORK_NAME);
+
+  if (!found) {
+    await docker.command(
+      `network create -d bridge ${process.env.NETWORK_NAME}`,
+    );
   }
 };

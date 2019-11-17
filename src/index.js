@@ -2,6 +2,7 @@ import { GraphQLServer } from 'graphql-yoga';
 import GraphQLJSON from 'graphql-type-json';
 import { runProfile } from './profile';
 import { createWorkPathFolder } from './util';
+import { createDockerNetwork } from './docker';
 
 const typeDefs = `
   scalar JSON
@@ -29,6 +30,8 @@ const resolvers = {
   },
   JSON: GraphQLJSON,
 };
+
+createDockerNetwork();
 
 createWorkPathFolder();
 
