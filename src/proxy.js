@@ -6,6 +6,8 @@ import path from 'path';
 export const updateProxyConfig = () => {
   const templateParams = {
     services: [],
+    hostPorts: [],
+    networkName: process.env.NETWORK_NAME,
   };
 
   Object.values(registry)
@@ -25,6 +27,8 @@ export const updateProxyConfig = () => {
             hostPort,
             serverName: `${version}_${serviceName}_1`,
           });
+
+          templateParams.hostPorts.push(hostPort);
         }
       }
     });
@@ -34,5 +38,15 @@ export const updateProxyConfig = () => {
   writeFileSync(
     `${path.basename(process.env.WORK_PATH)}/haproxy.cfg`,
     proxyConfig,
+  );
+
+  const composeConfig = renderFile(
+    'tpls/haproxy.docker-compose.yaml',
+    templateParams,
+  );
+
+  writeFileSync(
+    `${path.basename(process.env.WORK_PATH)}/docker-compose.yaml`,
+    composeConfig,
   );
 };
