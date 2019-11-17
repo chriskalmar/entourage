@@ -3,9 +3,9 @@ import fs from 'fs';
 import path from 'path';
 
 export const renderTemplate = (templateFilename, templateParams) => {
-  const filename = `${path.basename(
-    process.env.PROFILES_PATH,
-  )}/${templateFilename}`;
+  const filename = templateFilename.startsWith('/')
+    ? templateFilename
+    : `${path.basename(process.env.PROFILES_PATH)}/${templateFilename}`;
 
   if (!fs.existsSync(filename)) {
     throw new Error(`Template '${templateFilename}' not found`);
