@@ -2247,6 +2247,11 @@ dlv@^1.1.0:
   resolved "https://registry.yarnpkg.com/dlv/-/dlv-1.1.3.tgz#5c198a8a11453596e751494d49874bc7732f2e79"
   integrity sha512-+HlytyjlPKnIG8XuRG8WvmBP8xs8P71y+SKKS6ZXWoEgLuePxtDoUEiH7WkdePWrQ5JBpE6aoVqfZfJUQkjXwA==
 
+docker-compose@^0.23.1:
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/docker-compose/-/docker-compose-0.23.1.tgz#d71b1e244b989527585cbd43f6b20dea4881d34c"
+  integrity sha512-9e4moDWxAoEU/WEVJXUnoxXEWDQCX8tQIfuRntApl1atbvz1qV5uoC6YfgYbqUqcIgSD99iZWye7ePrN+ud8AA==
+
 doctrine@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/doctrine/-/doctrine-3.0.0.tgz#addebead72a6574db783639dc87a121773973961"
