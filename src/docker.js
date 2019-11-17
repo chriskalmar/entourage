@@ -50,6 +50,10 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
     }
   }
 
+  if (uniqPorts.length < 1) {
+    throw new Error('At least one service needs to expose a port');
+  }
+
   yaml.networks = yaml.networks || {};
   yaml.networks[process.env.NETWORK_NAME] = { external: true };
 
