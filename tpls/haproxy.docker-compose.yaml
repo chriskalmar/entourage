@@ -13,5 +13,5 @@ services:
       - <%= networkName %>
 
 networks:
-  entourage:
+  <%= networkName %>:
     external: true
