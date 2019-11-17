@@ -103,21 +103,25 @@ export const pullForDockerComposeFile = async (version, config) => {
   }
 };
 
-export const runDockerComposeFile = async (version, config) => {
-  const filePath = config.composeFile;
-  checkDockerComposeFileExists(filePath);
-
-  const workVersionFolder = getWorkVersionFolder(version);
-
+export const runDockerComposeFile = async (cwd, filePath) => {
   try {
     await compose.upAll({
-      cwd: workVersionFolder,
+      cwd,
       config: filePath,
       log: true,
     });
   } catch (error) {
     throw new Error(error.err);
   }
+};
+
+export const runWorkVersionDockerComposeFile = async (version, config) => {
+  const filePath = config.composeFile;
+  checkDockerComposeFileExists(filePath);
+
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  return runDockerComposeFile(workVersionFolder, filePath);
 };
 
 export const createDockerNetwork = async () => {

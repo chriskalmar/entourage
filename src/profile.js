@@ -14,9 +14,9 @@ import { executeScript } from './script';
 import {
   processDockerTask,
   pullForDockerComposeFile,
-  runDockerComposeFile,
+  runWorkVersionDockerComposeFile,
 } from './docker';
-import { updateProxyConfig } from './proxy';
+import { updateProxyConfig, restartProxy } from './proxy';
 import { addWorkVersionConfig } from './registry';
 
 export const runProfile = async (profile, params, version) => {
@@ -103,10 +103,13 @@ export const runProfile = async (profile, params, version) => {
   await pullForDockerComposeFile(version, docker);
 
   printTask('Starting docker-compose');
-  await runDockerComposeFile(version, docker);
+  await runWorkVersionDockerComposeFile(version, docker);
 
   printTask('Updating proxy');
   updateProxyConfig();
+
+  printTask('Restarting proxy');
+  restartProxy();
 
   // lockWorkVersionFolder(version);
 

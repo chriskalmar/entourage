@@ -2,6 +2,7 @@ import { registry } from './registry';
 import { renderFile } from './render';
 import { writeFileSync } from './util';
 import path from 'path';
+import { runDockerComposeFile } from './docker';
 
 export const updateProxyConfig = () => {
   const templateParams = {
@@ -50,3 +51,9 @@ export const updateProxyConfig = () => {
     composeConfig,
   );
 };
+
+export const restartProxy = async () =>
+  runDockerComposeFile(
+    path.basename(process.env.WORK_PATH),
+    'docker-compose.yaml',
+  );
