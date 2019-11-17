@@ -26,9 +26,12 @@ export const checkVersionPathBreakout = version => {
   }
 };
 
+export const writeFileSync = (filename, content) =>
+  fs.writeFileSync(filename, content, 'utf8');
+
 export const lockWorkVersionFolder = version => {
   const filename = `${path.basename(process.env.WORK_PATH)}/${version}/.lock`;
-  fs.writeFileSync(filename, '', 'utf8');
+  writeFileSync(filename, '');
 };
 
 export const isWorkVersionFolderLocked = version => {
@@ -106,6 +109,5 @@ export const storeWorkVersionConfig = (version, config) => {
   const filename = `${getWorkVersionFolder(version)}/.entourage.json`;
   const content = JSON.stringify(config, null, 2);
 
-  fs.writeFileSync(filename, content, 'utf8');
-
+  writeFileSync(filename, content);
 };

@@ -1,5 +1,7 @@
 import { registry } from './registry';
 import { renderFile } from './render';
+import { writeFileSync } from './util';
+import path from 'path';
 
 export const updateProxyConfig = () => {
   const templateParams = {
@@ -27,5 +29,10 @@ export const updateProxyConfig = () => {
       }
     });
 
-  renderFile('tpls/haproxy.cfg', templateParams);
+  const proxyConfig = renderFile('tpls/haproxy.cfg', templateParams);
+
+  writeFileSync(
+    `${path.basename(process.env.WORK_PATH)}/haproxy.cfg`,
+    proxyConfig,
+  );
 };
