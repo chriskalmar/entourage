@@ -12,6 +12,7 @@ import {
 } from './util';
 import { executeScript } from './script';
 import { processDockerTask } from './docker';
+import { updateProxyConfig } from './proxy';
 
 export const runProfile = async (profile, params, version) => {
   let profileFilename;
@@ -83,9 +84,13 @@ export const runProfile = async (profile, params, version) => {
   printTask(`Storing work version config`);
   storeWorkVersionConfig(version, {
     timestamp: new Date().getTime(),
-    params: templateParams,
+    version,
+    profile,
+    params: params,
     ports: portRegistry,
   });
+
+  updateProxyConfig();
 
   // lockWorkVersionFolder(version);
 
