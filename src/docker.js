@@ -78,5 +78,5 @@ export const processDockerTask = async (version, config, params) => {
     }
   }
 
-  console.log(JSON.stringify(portRegistry, null, 2));
+  return portRegistry;
 };

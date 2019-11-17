@@ -8,6 +8,7 @@ import {
   lockWorkVersionFolder,
   printTask,
   log,
+  storeWorkVersionConfig,
 } from './util';
 import { executeScript } from './script';
 import { processDockerTask } from './docker';
@@ -77,7 +78,14 @@ export const runProfile = async (profile, params, version) => {
   }
 
   printTask(`Executing 'docker'`);
-  await processDockerTask(version, docker, templateParams);
+  const portRegistry = await processDockerTask(version, docker, templateParams);
+
+  printTask(`Storing work version config`);
+  storeWorkVersionConfig(version, {
+    timestamp: new Date().getTime(),
+    params: templateParams,
+    ports: portRegistry,
+  });
 
   // lockWorkVersionFolder(version);
 

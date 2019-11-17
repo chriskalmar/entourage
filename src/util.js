@@ -101,3 +101,10 @@ export const getRandomPorts = async (
 
   return ports;
 };
+
+export const storeWorkVersionConfig = (version, config) => {
+  const filename = `${getWorkVersionFolder(version)}/.entourage.json`;
+  const content = JSON.stringify(config, null, 2);
+
+  fs.writeFileSync(filename, content, 'utf8');
+};
