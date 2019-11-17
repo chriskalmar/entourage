@@ -1,8 +1,9 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
 import { getWorkVersionFolder } from './util';
+import { parseYamlFile, serializeYamlFile } from './yaml';
 
-export const validateDockerComposeConfig = async (cwd, filePath) => {
+export const validateDockerComposeFile = async (cwd, filePath) => {
   if (!fs.existsSync(filePath)) {
     throw new Error(`Docker compose file '${filePath}' not found`);
   }
@@ -14,8 +15,46 @@ export const validateDockerComposeConfig = async (cwd, filePath) => {
   }
 };
 
-export const processDockerTask = async (version, config, params) => {
-  const cwd = getWorkVersionFolder(version);
+export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
+  const fullPath = `${workVersionFolder}/${filePath}`;
+  const yaml = parseYamlFile(fullPath);
 
-  await validateDockerComposeConfig(cwd, config.composeFile);
+  const portRegistry = {};
+  const uniqPorts = [];
+
+  for (const [serviceName, service] of Object.entries(yaml.services)) {
+    const { ports } = service;
+    if (ports) {
+      delete service.ports;
+
+      ports.map(portMapping => {
+        let [hostPort, containerPort] = portMapping.split(':');
+        containerPort = containerPort || hostPort;
+
+        if (uniqPorts.includes(hostPort)) {
+          throw new Error(`Too many services try to use port '${hostPort}'`);
+        }
+
+        uniqPorts.push(hostPort);
+
+        portRegistry[serviceName] = portRegistry[serviceName] || {};
+        portRegistry[serviceName][hostPort] = containerPort;
+      });
+    }
+  }
+
+  serializeYamlFile(yaml, fullPath);
+
+  return portRegistry;
+};
+
+export const processDockerTask = async (version, config, params) => {
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  await validateDockerComposeFile(workVersionFolder, config.composeFile);
+
+  const portRegistry = await adjustDockerComposeFile(
+    workVersionFolder,
+    config.composeFile,
+  );
 };
