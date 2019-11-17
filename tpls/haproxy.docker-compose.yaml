@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+  haproxy:
+    image: haproxy
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    ports: <%
+     _.forEach(hostPorts, function(port) {%>
+      - '<%= port %>:<%= port %>'<%
+    }) %>
+    networks:
+      - <%= networkName %>
+
+networks:
+  entourage:
+    external: true
