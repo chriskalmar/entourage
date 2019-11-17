@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
+import portfinder from 'portfinder';
 
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
@@ -64,3 +65,39 @@ export const createOrResetWorkVersionFolder = version => {
 export const printTask = task => console.log(`\n\n[ ${task} ]`);
 
 export const log = msg => console.log(msg);
+
+export const getRandomPort = async (minPort = 33000, maxPort = 65000) => {
+  const randomPort = minPort + Math.floor(Math.random() * (maxPort - minPort));
+
+  return await portfinder.getPortPromise({
+    port: randomPort,
+    stopPort: maxPort,
+  });
+};
+
+export const getRandomPorts = async (
+  count = 1,
+  minPort = 33000,
+  maxPort = 65000,
+  exclude = [],
+) => {
+  const ports = [];
+  let trial = 0;
+
+  while (ports.length < count) {
+    const port = await getRandomPort(minPort, maxPort);
+
+    if (ports.includes(port) || exclude.includes(port)) {
+      trial++;
+    } else {
+      ports.push(port);
+      trial = 0;
+    }
+
+    if (trial > 10) {
+      throw new Error('Too many tries to find an open port');
+    }
+  }
+
+  return ports;
+};

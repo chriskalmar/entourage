@@ -1,6 +1,6 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
-import { getWorkVersionFolder } from './util';
+import { getWorkVersionFolder, getRandomPorts } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 
 export const validateDockerComposeFile = async (cwd, filePath) => {
@@ -20,7 +20,6 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
   const yaml = parseYamlFile(fullPath);
 
   const portRegistry = {};
-  const uniqPorts = [];
 
   for (const [serviceName, service] of Object.entries(yaml.services)) {
     const { ports, networks } = service;
@@ -32,14 +31,8 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
         let [hostPort, containerPort] = portMapping.split(':');
         containerPort = containerPort || hostPort;
 
-        if (uniqPorts.includes(hostPort)) {
-          throw new Error(`Too many services try to use port '${hostPort}'`);
-        }
-
-        uniqPorts.push(hostPort);
-
         portRegistry[serviceName] = portRegistry[serviceName] || {};
-        portRegistry[serviceName][hostPort] = containerPort;
+        portRegistry[serviceName][containerPort] = 0;
       });
 
       if (!networks) {
@@ -50,7 +43,7 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
     }
   }
 
-  if (uniqPorts.length < 1) {
+  if (Object.keys(portRegistry).length < 1) {
     throw new Error('At least one service needs to expose a port');
   }
 
@@ -71,4 +64,19 @@ export const processDockerTask = async (version, config, params) => {
     workVersionFolder,
     config.composeFile,
   );
+
+  let countPorts = 0;
+  for (const service of Object.values(portRegistry)) {
+    countPorts += Object.keys(service).length;
+  }
+
+  const randomPorts = await getRandomPorts(countPorts);
+
+  for (const service of Object.values(portRegistry)) {
+    for (const containerPort of Object.keys(service)) {
+      service[containerPort] = randomPorts.shift();
+    }
+  }
+
+  console.log(JSON.stringify(portRegistry, null, 2));
 };

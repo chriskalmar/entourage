@@ -69,6 +69,7 @@
     "graphql-type-json": "^0.3.0",
     "graphql-yoga": "^1.18.3",
     "js-yaml": "^3.13.1",
-    "lodash": "^4.17.10"
+    "lodash": "^4.17.10",
+    "portfinder": "^1.0.25"
   }
 }
