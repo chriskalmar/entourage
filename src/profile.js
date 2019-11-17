@@ -11,7 +11,11 @@ import {
   storeWorkVersionConfig,
 } from './util';
 import { executeScript } from './script';
-import { processDockerTask } from './docker';
+import {
+  processDockerTask,
+  pullForDockerComposeFile,
+  runDockerComposeFile,
+} from './docker';
 import { updateProxyConfig } from './proxy';
 import { addWorkVersionConfig } from './registry';
 
@@ -98,6 +102,10 @@ export const runProfile = async (profile, params, version) => {
   printTask('Pulling containers');
   await pullForDockerComposeFile(version, docker);
 
+  printTask('Starting docker-compose');
+  await runDockerComposeFile(version, docker);
+
+  printTask('Updating proxy');
   updateProxyConfig();
 
   // lockWorkVersionFolder(version);
