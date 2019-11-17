@@ -23,7 +23,8 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
   const uniqPorts = [];
 
   for (const [serviceName, service] of Object.entries(yaml.services)) {
-    const { ports } = service;
+    const { ports, networks } = service;
+
     if (ports) {
       delete service.ports;
 
@@ -40,8 +41,17 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
         portRegistry[serviceName] = portRegistry[serviceName] || {};
         portRegistry[serviceName][hostPort] = containerPort;
       });
+
+      if (!networks) {
+        service.networks = [];
+      }
+
+      service.networks.push(process.env.NETWORK_NAME);
     }
   }
+
+  yaml.networks = yaml.networks || {};
+  yaml.networks[process.env.NETWORK_NAME] = { external: true };
 
   serializeYamlFile(yaml, fullPath);
 
