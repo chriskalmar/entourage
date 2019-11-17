@@ -8,10 +8,11 @@ export const createWorkPathFolder = () => {
   }
 };
 
+export const getWorkVersionFolder = version =>
+  path.normalize(`${path.basename(process.env.WORK_PATH)}/${version}`);
+
 export const checkVersionPathBreakout = version => {
-  const folderPath = path.normalize(
-    `${path.basename(process.env.WORK_PATH)}/${version}`,
-  );
+  const folderPath = getWorkVersionFolder(version);
 
   if (
     !folderPath.startsWith(path.normalize(path.basename(process.env.WORK_PATH)))

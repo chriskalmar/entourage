@@ -10,6 +10,7 @@ import {
   log,
 } from './util';
 import { executeScript } from './script';
+import { processDockerTask } from './docker';
 
 export const runProfile = async (profile, params, version) => {
   let profileFilename;
@@ -39,7 +40,7 @@ export const runProfile = async (profile, params, version) => {
 
   createOrResetWorkVersionFolder(version);
 
-  const { renderTemplates, beforeScript, script } = profileYaml;
+  const { renderTemplates, prepare, docker } = profileYaml;
 
   if (renderTemplates) {
     printTask('Rendering templates');
@@ -66,23 +67,17 @@ export const runProfile = async (profile, params, version) => {
     }
   }
 
-  if (beforeScript) {
-    printTask(`Executing 'beforeScript'`);
+  if (prepare) {
+    printTask(`Executing 'prepare'`);
 
-    for (const command of beforeScript) {
+    for (const command of prepare) {
       log(`\n${command}\n`);
       await executeScript(version, command, templateParams);
     }
   }
 
-  if (script) {
-    printTask(`Executing 'script'`);
-
-    for (const command of script) {
-      log(`\n${command}\n`);
-      await executeScript(version, command, templateParams);
-    }
-  }
+  printTask(`Executing 'docker'`);
+  await processDockerTask(version, docker, templateParams);
 
   // lockWorkVersionFolder(version);
 
