@@ -3,10 +3,14 @@ import fs from 'fs';
 import { getWorkVersionFolder, getRandomPorts } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 
-export const validateDockerComposeFile = async (cwd, filePath) => {
+export const checkDockerComposeFileExists = async filePath => {
   if (!fs.existsSync(filePath)) {
     throw new Error(`Docker compose file '${filePath}' not found`);
   }
+};
+
+export const validateDockerComposeFile = async (cwd, filePath) => {
+  checkDockerComposeFileExists(filePath);
 
   try {
     await compose.config({ cwd, config: filePath, log: true });
@@ -80,3 +84,21 @@ export const processDockerTask = async (version, config, params) => {
 
   return portRegistry;
 };
+
+export const pullForDockerComposeFile = async (version, config) => {
+  const filePath = config.composeFile;
+  checkDockerComposeFileExists(filePath);
+
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  try {
+    await compose.pullAll({
+      cwd: workVersionFolder,
+      config: filePath,
+      log: true,
+    });
+  } catch (error) {
+    throw new Error(error.err);
+  }
+};
+

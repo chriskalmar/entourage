@@ -95,6 +95,9 @@ export const runProfile = async (profile, params, version) => {
   storeWorkVersionConfig(version, versionConfig);
   addWorkVersionConfig(versionConfig);
 
+  printTask('Pulling containers');
+  await pullForDockerComposeFile(version, docker);
+
   updateProxyConfig();
 
   // lockWorkVersionFolder(version);
