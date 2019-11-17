@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
 import portfinder from 'portfinder';
-import { addWorkVersionConfig } from './registry';
 
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
@@ -109,5 +108,4 @@ export const storeWorkVersionConfig = (version, config) => {
 
   fs.writeFileSync(filename, content, 'utf8');
 
-  addWorkVersionConfig(config);
 };
