@@ -1,9 +1,10 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
 import path from 'path';
-import { getWorkVersionFolder, getRandomPorts } from './util';
+import { getWorkVersionFolder, getRandomPorts, writeFileSync } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 import { Docker, Options } from 'docker-cli-js';
+import { renderFile } from './render';
 
 export const checkDockerComposeFileExists = async filePath => {
   if (!fs.existsSync(filePath)) {
@@ -61,6 +62,29 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
   return portRegistry;
 };
 
+const updateDockerComposeFilesWithPorts = async (
+  version,
+  config,
+  portRegistry,
+) => {
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  const templateParams = {
+    __PORTS: {},
+  };
+
+  for (const [serviceName, service] of Object.entries(portRegistry)) {
+    for (const containerPort of Object.keys(service)) {
+      const key = `${serviceName}_${containerPort}`;
+      templateParams.__PORTS[key] = service[containerPort];
+    }
+  }
+
+  // TODO: should transform all files from `renderTemplates` config
+  const fullPath = `${workVersionFolder}/${config.composeFile}`;
+  writeFileSync(fullPath, renderFile(fullPath, templateParams));
+};
+
 export const processDockerTask = async (version, config, params) => {
   const workVersionFolder = getWorkVersionFolder(version);
 
@@ -83,6 +107,8 @@ export const processDockerTask = async (version, config, params) => {
       service[containerPort] = randomPorts.shift();
     }
   }
+
+  await updateDockerComposeFilesWithPorts(version, config, portRegistry);
 
   return portRegistry;
 };

@@ -2,6 +2,8 @@ import { renderFile } from './render';
 import fs from 'fs';
 import path from 'path';
 
+const escapePatterns = [`__PORTS\\..+`];
+
 export const renderTemplate = (templateFilename, templateParams) => {
   const filename = templateFilename.startsWith('/')
     ? templateFilename
@@ -11,7 +13,7 @@ export const renderTemplate = (templateFilename, templateParams) => {
     throw new Error(`Template '${templateFilename}' not found`);
   }
 
-  return renderFile(filename, templateParams);
+  return renderFile(filename, templateParams, escapePatterns);
 };
 
 export const renderTemplateToFile = (
