@@ -17,7 +17,7 @@ import {
   runWorkVersionDockerComposeFile,
 } from './docker';
 import { updateProxyConfig, restartProxy } from './proxy';
-import { addWorkVersionConfig } from './registry';
+import { addWorkVersionConfig, getWorkVersionConfig } from './registry';
 
 export const runProfile = async (profile, params, version) => {
   let profileFilename;
@@ -113,5 +113,5 @@ export const runProfile = async (profile, params, version) => {
 
   // lockWorkVersionFolder(version);
 
-  return {};
+  return getWorkVersionConfig(versionConfig);
 };
