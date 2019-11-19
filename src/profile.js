@@ -55,7 +55,6 @@ export const runProfile = async (profile, params, version) => {
         ...defaults.params,
         ...templateParams,
       };
-      console.log(JSON.stringify(templateParams, null, 2));
     }
   }
 
