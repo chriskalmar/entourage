@@ -36,7 +36,7 @@ export const runProfile = async (profile, params, version) => {
     throw new Error(`Profile '${profile}' not found`);
   }
 
-  const templateParams = {
+  let templateParams = {
     ...params,
     __VERSION: version,
     __PROFILE: profile,
@@ -47,7 +47,17 @@ export const runProfile = async (profile, params, version) => {
 
   createOrResetWorkVersionFolder(version);
 
-  const { renderTemplates, prepare, docker } = profileYaml;
+  const { defaults, renderTemplates, prepare, docker } = profileYaml;
+
+  if (defaults) {
+    if (defaults.params) {
+      templateParams = {
+        ...defaults.params,
+        ...templateParams,
+      };
+      console.log(JSON.stringify(templateParams, null, 2));
+    }
+  }
 
   if (renderTemplates) {
     printTask('Rendering templates');
