@@ -1,5 +1,6 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
+import path from 'path';
 import { getWorkVersionFolder, getRandomPorts } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 import { Docker, Options } from 'docker-cli-js';
@@ -11,7 +12,7 @@ export const checkDockerComposeFileExists = async filePath => {
 };
 
 export const validateDockerComposeFile = async (cwd, filePath) => {
-  checkDockerComposeFileExists(filePath);
+  checkDockerComposeFileExists(`${cwd}/${filePath}`);
 
   try {
     await compose.config({ cwd, config: filePath, log: true });
@@ -88,9 +89,9 @@ export const processDockerTask = async (version, config, params) => {
 
 export const pullForDockerComposeFile = async (version, config) => {
   const filePath = config.composeFile;
-  checkDockerComposeFileExists(filePath);
-
   const workVersionFolder = getWorkVersionFolder(version);
+
+  checkDockerComposeFileExists(workVersionFolder, filePath);
 
   try {
     await compose.pullAll({
@@ -117,9 +118,9 @@ export const runDockerComposeFile = async (cwd, filePath) => {
 
 export const runWorkVersionDockerComposeFile = async (version, config) => {
   const filePath = config.composeFile;
-  checkDockerComposeFileExists(filePath);
-
   const workVersionFolder = getWorkVersionFolder(version);
+
+  checkDockerComposeFileExists(workVersionFolder, filePath);
 
   return runDockerComposeFile(workVersionFolder, filePath);
 };
