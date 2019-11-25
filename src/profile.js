@@ -103,6 +103,7 @@ export const runProfile = async (profile, params, version) => {
     profile,
     params: params,
     ports: portRegistry,
+    docker,
   };
 
   storeWorkVersionConfig(version, versionConfig);
