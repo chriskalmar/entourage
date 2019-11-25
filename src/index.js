@@ -3,6 +3,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { runProfile } from './profile';
 import { createWorkPathFolder } from './util';
 import { createDockerNetwork } from './docker';
+import { log } from 'util';
 
 const typeDefs = `
   scalar JSON
@@ -36,6 +37,4 @@ createDockerNetwork();
 createWorkPathFolder();
 
 const server = new GraphQLServer({ typeDefs, resolvers });
-server.start(() =>
-  console.log(`Server is running on port ${process.env.PORT} ... 🚀`),
-);
+server.start(() => log(`Server is running on port ${process.env.PORT} ... 🚀`));
