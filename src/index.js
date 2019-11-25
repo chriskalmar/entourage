@@ -3,6 +3,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { runProfile } from './profile';
 import { createWorkPathFolder } from './util';
 import { createDockerNetwork } from './docker';
+import { initRegistry } from './registry';
 import { log } from 'util';
 
 const typeDefs = `
@@ -32,8 +33,8 @@ const resolvers = {
   JSON: GraphQLJSON,
 };
 
+initRegistry();
 createDockerNetwork();
-
 createWorkPathFolder();
 
 const server = new GraphQLServer({ typeDefs, resolvers });
