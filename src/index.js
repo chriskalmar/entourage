@@ -3,6 +3,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { runProfile } from './profile';
 import { createWorkPathFolder } from './util';
 import { createDockerNetwork } from './docker';
+import { getProfileStats } from './stats';
 import { initRegistry } from './registry';
 import { log } from 'util';
 
@@ -10,7 +11,10 @@ const typeDefs = `
   scalar JSON
 
   type Query {
-    hello(name: String): String!
+    getProfileStats(
+      version: String!
+      profile: String!
+    ): JSON!
   }
 
   type Mutation {
@@ -24,7 +28,8 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    hello: (_, { name }) => `Hello ${name || 'World'}`,
+    getProfileStats: (_, { profile, version }) =>
+      getProfileStats(profile, version),
   },
   Mutation: {
     runProfile: (_, { profile, params, version }) =>

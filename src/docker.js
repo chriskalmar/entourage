@@ -164,3 +164,14 @@ export const createDockerNetwork = async () => {
     );
   }
 };
+
+export const getDockerComposeStats = async (cwd, filePath) => {
+  try {
+    return await compose.ps({
+      cwd,
+      config: filePath,
+    });
+  } catch (error) {
+    throw new Error(error.err);
+  }
+};
