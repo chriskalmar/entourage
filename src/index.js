@@ -1,11 +1,12 @@
 import { GraphQLServer } from 'graphql-yoga';
 import GraphQLJSON from 'graphql-type-json';
 import { runProfile } from './profile';
-import { createWorkPathFolder } from './util';
+import { createWorkPathFolder, printTask } from './util';
 import { createDockerNetwork } from './docker';
 import { getProfileStats } from './stats';
 import { initRegistry } from './registry';
 import { log } from 'util';
+import { restartProxy, updateProxyConfig } from './proxy';
 
 const typeDefs = `
   scalar JSON
@@ -38,9 +39,17 @@ const resolvers = {
   JSON: GraphQLJSON,
 };
 
-initRegistry();
 createDockerNetwork();
 createWorkPathFolder();
+
+printTask('Initializing registry');
+initRegistry();
+
+printTask('Updating proxy');
+updateProxyConfig();
+
+printTask('Restarting proxy');
+restartProxy();
 
 const server = new GraphQLServer({ typeDefs, resolvers });
 server.start(() => log(`Server is running on port ${process.env.PORT} ... 🚀`));
