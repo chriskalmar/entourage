@@ -86,6 +86,10 @@ export const runProfile = async (profile, params, version) => {
   if (prepare) {
     printTask(`Executing 'prepare'`);
 
+    const prepareScriptTimeout = prepare.timeout
+      ? Number(prepare.timeout) * 1000
+      : 60000;
+
     if (prepare.script) {
       await executeScripts(
         version,
