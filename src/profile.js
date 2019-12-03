@@ -10,7 +10,7 @@ import {
   log,
   storeWorkVersionConfig,
 } from './util';
-import { executeScript } from './script';
+import { executeScripts } from './script';
 import {
   processDockerTask,
   pullForDockerComposeFile,
@@ -86,9 +86,13 @@ export const runProfile = async (profile, params, version) => {
   if (prepare) {
     printTask(`Executing 'prepare'`);
 
-    for (const command of prepare) {
-      log(`\n${command}\n`);
-      await executeScript(version, command, templateParams);
+    if (prepare.script) {
+      await executeScripts(
+        version,
+        prepare.script,
+        templateParams,
+        prepareScriptTimeout,
+      );
     }
   }
 
