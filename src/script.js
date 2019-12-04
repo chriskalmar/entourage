@@ -2,6 +2,7 @@ import execa from 'execa';
 import fs from 'fs';
 import path from 'path';
 import { log } from 'util';
+import { getWorkVersionFolder } from './util';
 
 export const executeScript = async (
   version,
@@ -9,9 +10,7 @@ export const executeScript = async (
   params,
   timeout = 1000 * 60 * 3,
 ) => {
-  const cwd = path.normalize(
-    `${path.basename(process.env.WORK_PATH)}/${version}`,
-  );
+  const cwd = getWorkVersionFolder(version);
 
   let subprocess;
   let timedOut = false;

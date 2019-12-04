@@ -1,6 +1,7 @@
 import { renderFile } from './render';
 import fs from 'fs';
 import path from 'path';
+import { getWorkVersionFolder } from './util';
 
 const escapePatterns = [`__PORTS\\..+`];
 
@@ -24,9 +25,7 @@ export const renderTemplateToFile = (
 ) => {
   const renderedTemplate = renderTemplate(templateFilename, templateParams);
 
-  const filename = `${path.basename(
-    process.env.WORK_PATH,
-  )}/${version}/${outputFilename}`;
+  const filename = `${getWorkVersionFolder(version)}/${outputFilename}`;
 
   if (!fs.existsSync(path.dirname(filename))) {
     fs.mkdirSync(path.dirname(filename), { recursive: true });

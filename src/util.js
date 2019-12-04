@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import rimraf from 'rimraf';
 import portfinder from 'portfinder';
+import { snakeCase } from 'lodash';
 
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
@@ -10,7 +11,9 @@ export const createWorkPathFolder = () => {
 };
 
 export const getWorkVersionFolder = version =>
-  path.normalize(`${path.basename(process.env.WORK_PATH)}/${version}`);
+  path.normalize(
+    `${path.basename(process.env.WORK_PATH)}/${snakeCase(version)}`,
+  );
 
 export const checkVersionPathBreakout = version => {
   const folderPath = getWorkVersionFolder(version);
@@ -30,19 +33,21 @@ export const writeFileSync = (filename, content) =>
   fs.writeFileSync(filename, content, 'utf8');
 
 export const lockWorkVersionFolder = version => {
-  const filename = `${path.basename(process.env.WORK_PATH)}/${version}/.lock`;
+  const folderPath = getWorkVersionFolder(version);
+  const filename = `${folderPath}/.lock`;
   writeFileSync(filename, '');
 };
 
 export const isWorkVersionFolderLocked = version => {
-  const filename = `${path.basename(process.env.WORK_PATH)}/${version}/.lock`;
+  const folderPath = getWorkVersionFolder(version);
+  const filename = `${folderPath}/.lock`;
   return fs.existsSync(filename);
 };
 
 export const deleteWorkVersionFolder = version => {
   checkVersionPathBreakout(version);
 
-  const folderPath = `${path.basename(process.env.WORK_PATH)}/${version}`;
+  const folderPath = getWorkVersionFolder(version);
 
   if (fs.existsSync(folderPath)) {
     rimraf.sync(folderPath);
@@ -58,7 +63,9 @@ export const createOrResetWorkVersionFolder = version => {
 
   deleteWorkVersionFolder(version);
 
-  const folderPath = `${path.basename(process.env.WORK_PATH)}/${version}`;
+  const folderPath = getWorkVersionFolder(version);
+
+  console.log(JSON.stringify({ folderPath }, null, 2));
 
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true });
