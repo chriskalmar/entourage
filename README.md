@@ -1,10 +1,10 @@
 <p align="center">
   <img
     src="./misc/entourage-logo.png"
-    width="150"
+    width="250"
   />
 </p>
 
-# entourage
+# Entourage
 
 Environment bootstrapping for integration tests
