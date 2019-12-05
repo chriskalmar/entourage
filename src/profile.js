@@ -19,7 +19,7 @@ import {
 import { updateProxyConfig, restartProxy } from './proxy';
 import { addWorkVersionConfig, getWorkVersionConfig } from './registry';
 
-export const runProfile = async (profile, params, version) => {
+export const runProfile = async (profile, params, version, asyncMode) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {
@@ -83,53 +83,77 @@ export const runProfile = async (profile, params, version) => {
     }
   }
 
-  if (prepare) {
-    printTask(`Executing 'prepare'`);
-
-    const prepareScriptTimeout = prepare.timeout
-      ? Number(prepare.timeout) * 1000
-      : 60000;
-
-    if (prepare.script) {
-      await executeScripts(
-        version,
-        prepare.script,
-        templateParams,
-        prepareScriptTimeout,
-      );
-    }
-  }
-
-  printTask(`Executing 'docker'`);
-  const portRegistry = await processDockerTask(version, docker, templateParams);
-
-  printTask(`Storing work version config`);
-
   const versionConfig = {
     timestamp: new Date().getTime(),
     version,
     profile,
-    params: params,
-    ports: portRegistry,
+    params,
     docker,
+    ready: false,
+    healthy: false,
   };
 
-  storeWorkVersionConfig(version, versionConfig);
   addWorkVersionConfig(versionConfig);
 
-  printTask('Pulling containers');
-  await pullForDockerComposeFile(version, docker);
+  const runAsync = async () => {
+    if (prepare) {
+      printTask(`Executing 'prepare'`);
 
-  printTask('Starting docker-compose');
-  await runWorkVersionDockerComposeFile(version, docker);
+      const prepareScriptTimeout = prepare.timeout
+        ? Number(prepare.timeout) * 1000
+        : 60000;
 
-  printTask('Updating proxy');
-  updateProxyConfig();
+      if (prepare.script) {
+        await executeScripts(
+          version,
+          prepare.script,
+          templateParams,
+          prepareScriptTimeout,
+        );
+      }
+    }
 
-  printTask('Restarting proxy');
-  restartProxy();
+    printTask(`Executing 'docker'`);
+    const portRegistry = await processDockerTask(
+      version,
+      docker,
+      templateParams,
+    );
 
-  // lockWorkVersionFolder(version);
+    versionConfig.ports = portRegistry;
+
+    printTask(`Storing work version config`);
+
+    storeWorkVersionConfig(version, versionConfig);
+    addWorkVersionConfig(versionConfig);
+
+    printTask('Pulling containers');
+    await pullForDockerComposeFile(version, docker);
+
+    printTask('Starting docker-compose');
+    await runWorkVersionDockerComposeFile(version, docker);
+
+    printTask('Updating proxy');
+    updateProxyConfig();
+
+    printTask('Restarting proxy');
+    restartProxy();
+
+    printTask(`Updating work version config`);
+
+    versionConfig.ready = true;
+    storeWorkVersionConfig(version, versionConfig);
+    addWorkVersionConfig(versionConfig);
+
+    // lockWorkVersionFolder(version);
+  };
+
+  if (asyncMode) {
+    runAsync();
+    return versionConfig;
+  }
+
+  await runAsync();
 
   return getWorkVersionConfig(versionConfig);
 };

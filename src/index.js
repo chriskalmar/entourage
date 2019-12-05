@@ -23,6 +23,7 @@ const typeDefs = `
       version: String!
       profile: String!
       params: JSON!
+      asyncMode: Boolean
     ): JSON!
   }
 `;
@@ -33,8 +34,8 @@ const resolvers = {
       getProfileStats(profile, version),
   },
   Mutation: {
-    runProfile: (_, { profile, params, version }) =>
-      runProfile(profile, params, version),
+    runProfile: (_, { profile, params, version, asyncMode }) =>
+      runProfile(profile, params, version, asyncMode),
   },
   JSON: GraphQLJSON,
 };
