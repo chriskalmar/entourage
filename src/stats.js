@@ -11,10 +11,12 @@ export const getProfileStats = async (profile, version) => {
 
   const filePath = config.docker.composeFile;
   const workVersionFolder = getWorkVersionFolder(version);
-  const stats = await getDockerComposeStats(workVersionFolder, filePath);
+  const { out } = config.ready
+    ? await getDockerComposeStats(workVersionFolder, filePath)
+    : {};
 
   return {
     ...config,
-    stats: stats.out,
+    stats: out,
   };
 };
