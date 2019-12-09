@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "Environment bootstrapping for integration tests",
   "main": "lib/",
-
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest --setupFilesAfterEnv ./loadEnv.js",
@@ -28,7 +27,7 @@
     "testEnvironment": "node"
   },
   "lint-staged": {
-    "*.js": "./node_modules/eslint/bin/eslint.js"
+    "*.js": "eslint"
   },
   "husky": {
     "hooks": {
@@ -49,11 +48,32 @@
     "docker-cli-js": "^2.6.0",
     "docker-compose": "^0.23.1",
     "dotenv": "^8.2.0",
-    "execa": "^3.3.0",
-    "graphql-type-json": "^0.3.0",
+    "execa": "^3.4.0",
+    "graphql-type-json": "^0.3.1",
     "graphql-yoga": "^1.18.3",
     "js-yaml": "^3.13.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.15",
     "portfinder": "^1.0.25"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.6",
+    "@babel/preset-env": "^7.7.6",
+    "@babel/runtime": "^7.7.6",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "codecov": "^3.6.1",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "lerna": "^3.19.0",
+    "lint-staged": "^9.5.0",
+    "nodemon": "^2.0.1",
+    "prettier": "^1.19.1",
+    "prettier-eslint": "^9.0.1",
+    "rimraf": "^3.0.0"
   }
 }
