@@ -62,4 +62,4 @@ typings/
 
 /packages/entourage-server/work
 /packages/entourage-server/profiles
-/lib
+/packages/*/lib/
