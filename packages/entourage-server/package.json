@@ -1,0 +1,59 @@
+{
+  "name": "entourage-server",
+  "version": "0.0.1",
+  "description": "Environment bootstrapping for integration tests",
+  "main": "lib/",
+
+  "scripts": {
+    "clean": "rimraf lib",
+    "test": "jest --setupFilesAfterEnv ./loadEnv.js",
+    "test-watch": "jest --watch --setupFilesAfterEnv ./loadEnv.js",
+    "test-integration": "jest --runInBand",
+    "test-integration-watch": "jest --runInBand --watch",
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "lint-staged": "lint-staged",
+    "coverage": "NODE_ENV=test jest --runInBand --coverage",
+    "coverage-ci": "npm run coverage && cat ./coverage/lcov.info | codecov",
+    "build": "mkdir -p lib; npm run test && NODE_ENV=build babel src -d lib --verbose",
+    "build-watch": "mkdir -p lib; NODE_ENV=build babel src -w -d lib --verbose",
+    "dev": "nodemon --exec babel-node -r loadEnv.js src/",
+    "start": "NODE_ENV=production node src/index.js",
+    "release": "np --no-publish"
+  },
+  "files": [
+    "lib"
+  ],
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "lint-staged": {
+    "*.js": "./node_modules/eslint/bin/eslint.js"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "pre-commit": "lint-staged",
+  "keywords": [
+    "test",
+    "tests",
+    "automation",
+    "integration",
+    "ci"
+  ],
+  "author": "Chris Kalmar <christian.kalmar@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "docker-cli-js": "^2.6.0",
+    "docker-compose": "^0.23.1",
+    "dotenv": "^8.2.0",
+    "execa": "^3.3.0",
+    "graphql-type-json": "^0.3.0",
+    "graphql-yoga": "^1.18.3",
+    "js-yaml": "^3.13.1",
+    "lodash": "^4.17.10",
+    "portfinder": "^1.0.25"
+  }
+}

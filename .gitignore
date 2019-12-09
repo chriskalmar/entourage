@@ -60,6 +60,6 @@ typings/
 # next.js build output
 .next
 
-/work
-/profiles
+/packages/entourage-server/work
+/packages/entourage-server/profiles
 /lib
