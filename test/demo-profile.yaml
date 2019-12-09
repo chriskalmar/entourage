@@ -1,0 +1,21 @@
+defaults:
+  params:
+    BASE_DB: "base_project_12"
+    EXTERNAL_ADDRESS: "127.0.0.1"
+    RABBITMQ: "3.7.17-management"
+
+renderTemplates:
+  sourcePath: templates
+  targetPath: .
+  files:
+    - <%= __PROFILE %>.init-db.sh
+    - <%= __PROFILE %>.docker-compose.yaml
+    - <%= __PROFILE %>.env
+
+prepare:
+  timeout: 90
+  script:
+    - . <%= __PROFILE %>.init-db.sh
+
+docker:
+  composeFile: <%= __PROFILE %>.docker-compose.yaml

@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`tempalte should render from a template 1`] = `
+"defaults:
+  params:
+    BASE_DB: \\"base_project_12\\"
+    EXTERNAL_ADDRESS: \\"127.0.0.1\\"
+    RABBITMQ: \\"3.7.17-management\\"
+
+renderTemplates:
+  sourcePath: templates
+  targetPath: .
+  files:
+    - blue-space-omlette.init-db.sh
+    - blue-space-omlette.docker-compose.yaml
+    - blue-space-omlette.env
+
+prepare:
+  timeout: 90
+  script:
+    - . blue-space-omlette.init-db.sh
+
+docker:
+  composeFile: blue-space-omlette.docker-compose.yaml
+"
+`;
