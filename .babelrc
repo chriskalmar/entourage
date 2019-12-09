@@ -1,5 +1,6 @@
 {
   "presets": ["@babel/env"],
+  "plugins": ["@babel/plugin-transform-runtime"],
   "env": {
     "build": {
       "ignore": ["**/*.spec.js"]
