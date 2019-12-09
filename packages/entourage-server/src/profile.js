@@ -5,7 +5,7 @@ import { parseYaml } from './yaml';
 import { renderTemplateToFile } from './template';
 import {
   createOrResetWorkVersionFolder,
-  lockWorkVersionFolder,
+  // lockWorkVersionFolder,
   printTask,
   log,
   storeWorkVersionConfig,
@@ -71,7 +71,7 @@ export const runProfile = async (profile, params, version, asyncMode) => {
           ? `${renderTemplates.targetPath}/${template}`
           : template;
 
-        const renderedTemplate = renderTemplateToFile(
+        renderTemplateToFile(
           templateFilename,
           templateParams,
           version,
@@ -97,7 +97,7 @@ export const runProfile = async (profile, params, version, asyncMode) => {
 
   const runAsync = async () => {
     if (prepare) {
-      printTask(`Executing 'prepare'`);
+      printTask('Executing \'prepare\'');
 
       const prepareScriptTimeout = prepare.timeout
         ? Number(prepare.timeout) * 1000
@@ -113,7 +113,7 @@ export const runProfile = async (profile, params, version, asyncMode) => {
       }
     }
 
-    printTask(`Executing 'docker'`);
+    printTask('Executing \'docker\'');
     const portRegistry = await processDockerTask(
       version,
       docker,
@@ -122,7 +122,7 @@ export const runProfile = async (profile, params, version, asyncMode) => {
 
     versionConfig.ports = portRegistry;
 
-    printTask(`Storing work version config`);
+    printTask('Storing work version config');
 
     storeWorkVersionConfig(version, versionConfig);
     addWorkVersionConfig(versionConfig);
@@ -139,7 +139,7 @@ export const runProfile = async (profile, params, version, asyncMode) => {
     printTask('Restarting proxy');
     restartProxy();
 
-    printTask(`Updating work version config`);
+    printTask('Updating work version config');
 
     versionConfig.ready = true;
     storeWorkVersionConfig(version, versionConfig);

@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getWorkVersionFolder } from './util';
 
+// eslint-disable-next-line quotes
 const escapePatterns = [`__PORTS\\..+`];
 
 export const renderTemplate = (templateFilename, templateParams) => {

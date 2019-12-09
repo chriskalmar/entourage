@@ -1,4 +1,4 @@
-import { log, getWorkVersionFolder } from './util';
+import { getWorkVersionFolder } from './util';
 import { getDockerComposeStats } from './docker';
 import { getWorkVersionConfig } from './registry';
 

@@ -4,6 +4,9 @@ import rimraf from 'rimraf';
 import portfinder from 'portfinder';
 import { snakeCase } from 'lodash';
 
+// eslint-disable-next-line no-console
+export const log = msg => console.log(msg);
+
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
     fs.mkdirSync(path.basename(process.env.WORK_PATH), { recursive: true });
@@ -65,16 +68,14 @@ export const createOrResetWorkVersionFolder = version => {
 
   const folderPath = getWorkVersionFolder(version);
 
-  console.log(JSON.stringify({ folderPath }, null, 2));
+  log(JSON.stringify({ folderPath }, null, 2));
 
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true });
   }
 };
 
-export const printTask = task => console.log(`\n\n[ ${task} ]`);
-
-export const log = msg => console.log(msg);
+export const printTask = task => log(`\n\n[ ${task} ]`);
 
 export const getRandomPort = async (minPort = 33000, maxPort = 65000) => {
   const randomPort = minPort + Math.floor(Math.random() * (maxPort - minPort));

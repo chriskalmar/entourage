@@ -1,9 +1,8 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
-import path from 'path';
 import { getWorkVersionFolder, getRandomPorts, writeFileSync } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
-import { Docker, Options } from 'docker-cli-js';
+import { Docker } from 'docker-cli-js';
 import { renderFile } from './render';
 
 export const checkDockerComposeFileExists = async filePath => {
@@ -35,8 +34,8 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
       delete service.ports;
 
       ports.map(portMapping => {
-        let [hostPort, containerPort] = portMapping.split(':');
-        containerPort = containerPort || hostPort;
+        const [hostPort, _containerPort] = portMapping.split(':');
+        const containerPort = _containerPort || hostPort;
 
         portRegistry[serviceName] = portRegistry[serviceName] || {};
         portRegistry[serviceName][containerPort] = 0;
@@ -85,7 +84,7 @@ const updateDockerComposeFilesWithPorts = async (
   writeFileSync(fullPath, renderFile(fullPath, templateParams));
 };
 
-export const processDockerTask = async (version, config, params) => {
+export const processDockerTask = async (version, config) => {
   const workVersionFolder = getWorkVersionFolder(version);
 
   await validateDockerComposeFile(workVersionFolder, config.composeFile);

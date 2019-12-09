@@ -1,6 +1,4 @@
 import execa from 'execa';
-import fs from 'fs';
-import path from 'path';
 import { log } from 'util';
 import { getWorkVersionFolder } from './util';
 
