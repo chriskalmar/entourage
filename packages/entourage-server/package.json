@@ -21,7 +21,11 @@
     "release": "np --no-publish"
   },
   "files": [
-    "lib"
+    "lib",
+    "tpls",
+    "default.env",
+    "loadEnv.js",
+    "README.md"
   ],
   "jest": {
     "testEnvironment": "node"
