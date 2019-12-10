@@ -23,6 +23,7 @@
   "files": [
     "lib",
     "tpls",
+    "misc",
     "default.env",
     "loadEnv.js",
     "README.md"
