@@ -1,10 +1,19 @@
-<p align="center">
-  <img
-    src="./misc/entourage-logo.png"
-    width="250"
-  />
-</p>
+# entourage-server
 
-# Entourage
+> Server for environment bootstrapping
 
-Environment bootstrapping for integration tests
+See repository page [chriskalmar/entourage](https://github.com/chriskalmar/entourage) for more information.
+
+## Install
+
+Using npm:
+
+```sh
+npm install entourage-server
+```
+
+or using yarn:
+
+```sh
+yarn add entourage-server
+```
