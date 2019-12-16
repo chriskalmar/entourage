@@ -2,6 +2,16 @@ import { getWorkVersionFolder } from './util';
 import { getDockerComposeStats } from './docker';
 import { getWorkVersionConfig } from './registry';
 
+export const getProfileConfig = async (profile, version) => {
+  const config = getWorkVersionConfig({ profile, version });
+
+  if (!config) {
+    throw new Error('Unknown profile');
+  }
+
+  return config;
+};
+
 export const getProfileStats = async (profile, version) => {
   const config = getWorkVersionConfig({ profile, version });
 
@@ -15,8 +25,5 @@ export const getProfileStats = async (profile, version) => {
     ? await getDockerComposeStats(workVersionFolder, filePath)
     : {};
 
-  return {
-    ...config,
-    stats: out,
-  };
+  return out;
 };

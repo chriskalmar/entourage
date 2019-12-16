@@ -3,7 +3,7 @@ import GraphQLJSON from 'graphql-type-json';
 import { initProfile } from './profile';
 import { createWorkPathFolder, printTask } from './util';
 import { createDockerNetwork } from './docker';
-import { getProfileStats } from './stats';
+import { getProfileStats, getProfileConfig } from './stats';
 import { initRegistry } from './registry';
 import { log } from 'util';
 import { restartProxy, updateProxyConfig } from './proxy';
@@ -11,11 +11,23 @@ import { restartProxy, updateProxyConfig } from './proxy';
 const typeDefs = `
   scalar JSON
 
+  type ProfileState {
+    timestamp: String!
+    version: String!
+    profile: String!
+    params: JSON!
+    docker: JSON!
+    ready: Boolean!
+    healthy: Boolean!
+    ports: JSON
+    stats: JSON
+  }
+
   type Query {
     getProfileStats(
       version: String!
       profile: String!
-    ): JSON!
+    ): ProfileState!
   }
 
   type Mutation {
@@ -24,14 +36,17 @@ const typeDefs = `
       profile: String!
       params: JSON!
       asyncMode: Boolean
-    ): JSON!
+    ): ProfileState!
   }
 `;
 
 const resolvers = {
   Query: {
     getProfileStats: (_, { profile, version }) =>
-      getProfileStats(profile, version),
+      getProfileConfig(profile, version),
+  },
+  ProfileState: {
+    stats: ({ profile, version }) => getProfileStats(profile, version),
   },
   Mutation: {
     initProfile: (_, { profile, params, version, asyncMode }) =>
