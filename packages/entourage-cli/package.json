@@ -62,6 +62,7 @@
     "rimraf": "^3.0.0"
   },
   "dependencies": {
+    "axios": "^0.19.0",
     "yargs": "^15.0.2"
   }
 }
