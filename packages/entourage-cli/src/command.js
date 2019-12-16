@@ -1,5 +1,8 @@
 import fs from 'fs';
 import path from 'path';
+import axios from 'axios';
+
+axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const readConfig = configPath => {
   if (!fs.existsSync(configPath)) {
@@ -21,7 +24,52 @@ const checkConfig = config => {
   throw new Error('Invalid config');
 };
 
-export const init = argv => {
+export const init = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
+
+  try {
+    console.log(`Contacting entourage server at ${config.url} ...`);
+
+    const result = await axios({
+      url: config.url,
+      method: 'POST',
+      json: true,
+      data: {
+        query: `
+          mutation runProfile(
+            $version: String!
+            $profile: String!
+            $params: JSON!
+          ) {
+            runProfile(
+              version: $version
+              profile: $profile
+              params: $params
+              asyncMode: true
+            )
+          }
+        `,
+        variables: {
+          profile: config.profile,
+          params: config.params || {},
+          version: argv.versionName,
+        },
+      },
+    });
+
+    const body = result.data;
+
+    if (body.errors && body.errors.length) {
+      throw new Error(body.errors[0].message);
+    }
+  } catch (e) {
+    if (e.response) {
+      console.error(JSON.stringify(e.response.data, null, 2));
+    } else {
+      console.error(e.message);
+    }
+
+    process.exit(1);
+  }
 };

@@ -9,7 +9,17 @@ const argv = yargs
   .strict()
   .scriptName('entourage-cli')
   .usage('$0 <cmd> [args]')
-  .command('init', 'Initialize new profile', () => {}, init)
+  .command(
+    'init <versionName>',
+    'Initialize new profile',
+    _yargs => {
+      _yargs.positional('versionName', {
+        type: 'string',
+        describe: 'Version name for running the profile',
+      });
+    },
+    init,
+  )
   .command(
     'wait [seconds]',
     'Wait for profile to be ready',
