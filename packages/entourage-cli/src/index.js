@@ -1,4 +1,5 @@
 import yargs from 'yargs';
+import { init } from './command';
 
 const fn = argv => {
   console.log(JSON.stringify(argv, null, 2));
@@ -8,7 +9,7 @@ const argv = yargs
   .strict()
   .scriptName('entourage-cli')
   .usage('$0 <cmd> [args]')
-  .command('init', 'Initialize new profile', fn)
+  .command('init', 'Initialize new profile', () => {}, init)
   .command(
     'wait [seconds]',
     'Wait for profile to be ready',
@@ -21,8 +22,8 @@ const argv = yargs
     },
     fn,
   )
-  .command('env', 'Export ports as environment variables', fn)
-  .command('destroy', 'Destroy the profile', fn)
+  .command('env', 'Export ports as environment variables', () => {}, fn)
+  .command('destroy', 'Destroy the profile', () => {}, fn)
   .options({
     file: {
       describe: 'config file location',
