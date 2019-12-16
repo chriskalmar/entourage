@@ -37,12 +37,12 @@ export const init = async argv => {
       json: true,
       data: {
         query: `
-          mutation runProfile(
+          mutation initProfile(
             $version: String!
             $profile: String!
             $params: JSON!
           ) {
-            runProfile(
+            initProfile(
               version: $version
               profile: $profile
               params: $params

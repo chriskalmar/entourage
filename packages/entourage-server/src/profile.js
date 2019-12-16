@@ -19,7 +19,7 @@ import {
 import { updateProxyConfig, restartProxy } from './proxy';
 import { addWorkVersionConfig, getWorkVersionConfig } from './registry';
 
-export const runProfile = async (profile, params, version, asyncMode) => {
+export const initProfile = async (profile, params, version, asyncMode) => {
   let profileFilename;
 
   ['yaml', 'yml'].map(ext => {

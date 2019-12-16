@@ -1,6 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga';
 import GraphQLJSON from 'graphql-type-json';
-import { runProfile } from './profile';
+import { initProfile } from './profile';
 import { createWorkPathFolder, printTask } from './util';
 import { createDockerNetwork } from './docker';
 import { getProfileStats } from './stats';
@@ -19,7 +19,7 @@ const typeDefs = `
   }
 
   type Mutation {
-    runProfile(
+    initProfile(
       version: String!
       profile: String!
       params: JSON!
@@ -34,8 +34,8 @@ const resolvers = {
       getProfileStats(profile, version),
   },
   Mutation: {
-    runProfile: (_, { profile, params, version, asyncMode }) =>
-      runProfile(profile, params, version, asyncMode),
+    initProfile: (_, { profile, params, version, asyncMode }) =>
+      initProfile(profile, params, version, asyncMode),
   },
   JSON: GraphQLJSON,
 };
