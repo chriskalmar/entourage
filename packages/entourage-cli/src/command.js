@@ -5,6 +5,7 @@ import { request } from './request';
 import { printProgressDots, sleep } from './util';
 
 const waitRequestInterval = 5000;
+const defaultTimeout = 120000;
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -20,7 +21,9 @@ const readConfig = configPath => {
 
 const checkConfig = config => {
   if (typeof config === 'object') {
-    if (config.url && config.profile) {
+    config.timeout = Number(config.timeout || defaultTimeout);
+
+    if (config.url && config.profile && config.timeout > 0) {
       return true;
     }
   }
@@ -101,7 +104,7 @@ export const wait = async argv => {
 
   const timeoutFn = setTimeout(() => {
     timedout = true;
-  }, 5000);
+  }, config.timeout);
 
   while (!ready && !timedout) {
     ready = await checkReadyness({ config, versionName });
