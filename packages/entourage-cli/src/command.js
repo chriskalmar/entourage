@@ -2,6 +2,9 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import { request } from './request';
+import { printProgressDots, sleep } from './util';
+
+const waitRequestInterval = 5000;
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
@@ -86,6 +89,38 @@ const checkReadyness = async ({ config, versionName }) => {
 
   return ready && healthy;
 };
+
+export const wait = async argv => {
+  const config = readConfig(argv.file);
+  checkConfig(config);
+  const { versionName } = argv;
+
+  const stopProgressDots = printProgressDots();
+  let ready = false;
+  let timedout = false;
+
+  const timeoutFn = setTimeout(() => {
+    timedout = true;
+  }, 5000);
+
+  while (!ready && !timedout) {
+    ready = await checkReadyness({ config, versionName });
+    await sleep(waitRequestInterval);
+  }
+
+  stopProgressDots();
+  clearTimeout(timeoutFn);
+
+  if (!ready) {
+    if (timedout) {
+      console.error('Operation timed out');
+    }
+
+    console.error('Error: Profile is not ready');
+    process.exit(1);
+  }
+};
+
 export const env = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);

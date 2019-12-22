@@ -1,5 +1,5 @@
 import yargs from 'yargs';
-import { init, env } from './command';
+import { init, env, wait } from './command';
 
 const fn = argv => {
   console.log(JSON.stringify(argv, null, 2));
@@ -35,7 +35,7 @@ const argv = yargs
         describe: 'Seconds to wait before timing out',
       });
     },
-    fn,
+    wait,
   )
   .command(
     'env <versionName> [prefix]',
