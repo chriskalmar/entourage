@@ -8,3 +8,7 @@
 # Entourage
 
 Environment bootstrapping for integration tests
+
+## TODOs
+
+- [ ] provide functionality to run health checks

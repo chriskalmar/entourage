@@ -142,6 +142,10 @@ export const initProfile = async (profile, params, version, asyncMode) => {
     printTask('Updating work version config');
 
     versionConfig.ready = true;
+
+    // TODO: implement health checks
+    versionConfig.healthy = true;
+
     storeWorkVersionConfig(version, versionConfig);
     addWorkVersionConfig(versionConfig);
 
