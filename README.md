@@ -24,4 +24,6 @@ Check package details page of [entourage-cli](https://github.com/chriskalmar/ent
 ## TODOs
 
 - [ ] provide functionality to run health checks
-- [ ] implement container cleanup process (garbage collection)
+- [ ] implement container clean-up process (garbage collection)
+- [ ] lock versions
+- [ ] destroy profiles (clean up after CI task)
