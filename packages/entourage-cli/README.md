@@ -18,7 +18,7 @@ or using yarn:
 yarn add entourage-cli
 ```
 
-## Exmaple use with a CI pipeline
+## Example use with a CI pipeline
 
 ```bash
 
