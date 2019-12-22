@@ -25,15 +25,10 @@ const argv = yargs
     init,
   )
   .command(
-    'wait <versionName> [seconds]',
+    'wait <versionName>',
     'Wait for profile to be ready',
     _yargs => {
       versionNameParam(_yargs);
-      _yargs.positional('seconds', {
-        type: 'number',
-        default: '180',
-        describe: 'Seconds to wait before timing out',
-      });
     },
     wait,
   )
