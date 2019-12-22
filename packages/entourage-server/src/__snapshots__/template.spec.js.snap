@@ -3,9 +3,9 @@
 exports[`tempalte should render from a template 1`] = `
 "defaults:
   params:
-    BASE_DB: \\"base_project_12\\"
-    EXTERNAL_ADDRESS: \\"127.0.0.1\\"
-    RABBITMQ: \\"3.7.17-management\\"
+    BASE_DB: 'base_project_12'
+    EXTERNAL_ADDRESS: '127.0.0.1'
+    RABBITMQ: '3.7.17-management'
 
 renderTemplates:
   sourcePath: templates
