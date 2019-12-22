@@ -29,6 +29,8 @@ export const init = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
 
+  console.log(`Contacting entourage server at ${config.url} ...`);
+
   request({
     config,
     query: `
@@ -53,4 +55,48 @@ export const init = async argv => {
       version: argv.versionName,
     },
   });
+};
+
+export const env = async argv => {
+  const config = readConfig(argv.file);
+  checkConfig(config);
+
+  const result = await request({
+    config,
+    query: `
+      query getProfileStats(
+        $version: String!
+        $profile: String!
+      ) {
+        getProfileStats(
+          version: $version
+          profile: $profile
+        ) {
+          timestamp
+          version
+          profile
+          params
+          docker
+          ready
+          healthy
+          ports
+        }
+      }
+    `,
+    variables: {
+      profile: config.profile,
+      version: argv.versionName,
+    },
+  });
+
+  const {
+    getProfileStats: { ports },
+  } = result;
+
+  for (const [serviceName, portMap] of Object.entries(ports)) {
+    for (const [definedPort, assignedPort] of Object.entries(portMap)) {
+      const envVar = `PORT_${serviceName}_${definedPort}`;
+      console.log(`export ${envVar}=${assignedPort}`);
+    }
+  }
 };
