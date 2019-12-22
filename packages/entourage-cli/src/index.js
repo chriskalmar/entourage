@@ -1,5 +1,5 @@
 import yargs from 'yargs';
-import { init } from './command';
+import { init, env } from './command';
 
 const fn = argv => {
   console.log(JSON.stringify(argv, null, 2));
@@ -38,12 +38,17 @@ const argv = yargs
     fn,
   )
   .command(
-    'env <versionName>',
+    'env <versionName> [prefix]',
     'Export ports as environment variables',
     _yargs => {
       versionNameParam(_yargs);
+      _yargs.positional('prefix', {
+        type: 'string',
+        default: 'PORT_',
+        describe: 'Prefix for exported environment variables',
+      });
     },
-    fn,
+    env,
   )
   .command(
     'destroy <versionName>',

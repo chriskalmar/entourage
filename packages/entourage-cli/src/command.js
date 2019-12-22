@@ -61,6 +61,8 @@ export const env = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
 
+  const { prefix } = argv;
+
   const result = await request({
     config,
     query: `
@@ -95,7 +97,7 @@ export const env = async argv => {
 
   for (const [serviceName, portMap] of Object.entries(ports)) {
     for (const [definedPort, assignedPort] of Object.entries(portMap)) {
-      const envVar = `PORT_${serviceName}_${definedPort}`;
+      const envVar = `${prefix}${serviceName}_${definedPort}`;
       console.log(`export ${envVar}=${assignedPort}`);
     }
   }
