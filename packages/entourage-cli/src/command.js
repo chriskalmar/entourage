@@ -57,6 +57,35 @@ export const init = async argv => {
   });
 };
 
+const checkReadyness = async ({ config, versionName }) => {
+  const result = await request({
+    config,
+    query: `
+      query getProfileStats(
+        $version: String!
+        $profile: String!
+      ) {
+        getProfileStats(
+          version: $version
+          profile: $profile
+        ) {
+          ready
+          healthy
+        }
+      }
+    `,
+    variables: {
+      profile: config.profile,
+      version: versionName,
+    },
+  });
+
+  const {
+    getProfileStats: { ready, healthy },
+  } = result;
+
+  return ready && healthy;
+};
 export const env = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
