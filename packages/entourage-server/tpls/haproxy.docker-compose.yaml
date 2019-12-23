@@ -1,11 +1,12 @@
-version: '2'
+version: '3'
 
 services:
   haproxy:
     image: haproxy
     volumes:
-      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
-    ports: <%
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro <%
+    if (hostPorts.length) { %>
+    ports: <% }
      _.forEach(hostPorts, function(port) {%>
       - '<%= port %>:<%= port %>'<%
     }) %>
