@@ -17,8 +17,7 @@
     "build": "mkdir -p lib; npm run test && NODE_ENV=build babel src -d lib --verbose",
     "build-watch": "mkdir -p lib; NODE_ENV=build babel src -w -d lib --verbose",
     "dev": "nodemon --exec babel-node -r loadEnv.js src/",
-    "start": "NODE_ENV=production node src/index.js",
-    "release": "np --no-publish"
+    "start": "NODE_ENV=production node -r ./loadEnv.js lib/"
   },
   "files": [
     "lib",
