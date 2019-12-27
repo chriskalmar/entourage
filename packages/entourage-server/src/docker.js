@@ -1,9 +1,13 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
+import os from 'os';
+import _ from 'lodash';
 import { getWorkVersionFolder, getRandomPorts, writeFileSync } from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 import { Docker } from 'docker-cli-js';
 import { renderFile } from './render';
+
+const WORK_FOLDER_MOUNT_DESTINATION = '/app/work';
 
 export const checkDockerComposeFileExists = async filePath => {
   if (!fs.existsSync(filePath)) {
@@ -173,4 +177,26 @@ export const getDockerComposeStats = async (cwd, filePath) => {
   } catch (error) {
     throw new Error(error.err);
   }
+};
+
+export const getWorkFolderMountSource = async () => {
+  const docker = new Docker({});
+  const hostname = 'entourage' || os.hostname();
+
+  const result = await docker.command(`inspect ${hostname}`);
+  const mounts = _.get(result, 'object[0].Mounts');
+
+  if (mounts) {
+    const found = mounts.find(
+      mount => mount.Destination === WORK_FOLDER_MOUNT_DESTINATION,
+    );
+
+    if (found) {
+      return found.Type === 'bind' ? found.Source : found.Name;
+    }
+  }
+
+  throw new Error(
+    'Cannot detect work folder mount point. Are you running Entourage server via docker?',
+  );
 };

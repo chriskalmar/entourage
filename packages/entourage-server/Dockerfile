@@ -2,6 +2,8 @@ FROM node:13.5.0-buster
 
 LABEL maintainer="Chris Kalmar <christian.kalmar@gmail.com>"
 
+ENV ENTOURAGE_DOCKER_MODE=1
+
 RUN apt-get update \
   && apt-get upgrade -y \
   && curl -fsSL https://get.docker.com | bash \

@@ -2,13 +2,20 @@ import { registry } from './registry';
 import { renderFile } from './render';
 import { writeFileSync } from './util';
 import path from 'path';
-import { runDockerComposeFile } from './docker';
+import { runDockerComposeFile, getWorkFolderMountSource } from './docker';
+
+let workFolder = '.';
+
+if (Number(process.env.ENTOURAGE_DOCKER_MODE) === 1) {
+  getWorkFolderMountSource().then(folder => (workFolder = folder));
+}
 
 export const updateProxyConfig = () => {
   const templateParams = {
     services: [],
     hostPorts: [],
     networkName: process.env.NETWORK_NAME,
+    workFolder,
   };
 
   Object.values(registry)
