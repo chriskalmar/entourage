@@ -12,6 +12,7 @@ Run entourage server as a privileged docker container and provide a profiles fol
 docker run -d --name entourage \
   -v /var/run/docker.sock:/var/run/docker.sock \
   -v $PWD/profiles:/app/profiles \
+  -v $PWD/work:/app/work \
   -p 5858:5858 \
   chriskalmar/entourage:latest
 ```
