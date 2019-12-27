@@ -16,3 +16,4 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
         workdir: packages/entourage-server/
+        tag_names: true
