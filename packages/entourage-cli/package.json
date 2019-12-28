@@ -16,7 +16,8 @@
     "build-watch": "mkdir -p lib; NODE_ENV=build babel src -w -d lib --verbose",
     "dev": "babel-node src/",
     "start": "NODE_ENV=production node src/index.js",
-    "release": "np --no-publish"
+    "release": "np --no-publish",
+    "prepublishOnly": "npm run build"
   },
   "files": [
     "lib"
