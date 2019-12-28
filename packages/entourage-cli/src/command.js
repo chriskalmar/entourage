@@ -19,7 +19,7 @@ const readConfig = configPath => {
   return typeof content === 'function' ? content() : content;
 };
 
-const checkConfig = config => {
+export const checkConfig = config => {
   if (typeof config === 'object') {
     config.timeout = Number(config.timeout || defaultTimeout);
 
