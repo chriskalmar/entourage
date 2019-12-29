@@ -3,6 +3,10 @@
   "version": "0.1.3",
   "description": "Client for entourage",
   "main": "lib/",
+  "bin": {
+    "@chriskalmar/entourage-cli": "bin/entourage-cli",
+    "entourage-cli": "bin/entourage-cli"
+  },
   "scripts": {
     "clean": "rimraf lib",
     "test": "jest",
