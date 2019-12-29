@@ -5,7 +5,8 @@
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "release": "lerna publish --contents dist"
   },
   "lint-staged": {
     "*.js": "eslint"

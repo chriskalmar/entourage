@@ -8,7 +8,7 @@
     "entourage-cli": "bin/entourage-cli"
   },
   "scripts": {
-    "clean": "rimraf lib",
+    "clean": "rimraf dist",
     "test": "jest",
     "test-watch": "jest --watch",
     "lint": "eslint .",
@@ -16,12 +16,12 @@
     "lint-staged": "lint-staged",
     "coverage": "NODE_ENV=test jest --runInBand --coverage",
     "coverage-ci": "npm run coverage && cat ./coverage/lcov.info | codecov",
-    "build": "mkdir -p lib; npm run test && NODE_ENV=build babel src -d lib --verbose",
-    "build-watch": "mkdir -p lib; NODE_ENV=build babel src -w -d lib --verbose",
+    "build": "npm run clean && mkdir -p dist/lib; npm run test && NODE_ENV=build babel src -d dist/lib --verbose",
+    "build-watch": "mkdir -p dist/lib; NODE_ENV=build babel src -w -d dist/lib --verbose",
     "dev": "babel-node src/",
     "start": "NODE_ENV=production node src/index.js",
     "release": "np --no-publish",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && cp -r bin package.json dist/"
   },
   "publishConfig": {
     "access": "public"
