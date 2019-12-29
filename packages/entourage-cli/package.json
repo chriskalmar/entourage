@@ -19,8 +19,12 @@
     "release": "np --no-publish",
     "prepublishOnly": "npm run build"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
-    "lib"
+    "lib",
+    "bin"
   ],
   "jest": {
     "testEnvironment": "node"
