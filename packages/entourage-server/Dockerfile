@@ -17,10 +17,9 @@ COPY . /app/
 RUN ls -lah /app
 RUN find /app
 
-RUN yarn install \
-  && yarn cache clean \
-  && yarn build
+RUN npm install \
+  && npm build
 
 EXPOSE 5858
 
-CMD yarn run start
+CMD npm run start
