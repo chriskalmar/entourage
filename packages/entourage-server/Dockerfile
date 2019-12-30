@@ -14,9 +14,6 @@ WORKDIR /app
 
 COPY . /app/
 
-RUN ls -lah /app
-RUN find /app
-
 RUN npm install \
   && npm build
 
