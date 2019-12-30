@@ -1,11 +1,11 @@
 {
   "name": "entourage-cli",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Client for entourage",
   "main": "lib/",
   "bin": {
-    "@chriskalmar/entourage-cli": "bin/entourage-cli",
-    "entourage-cli": "bin/entourage-cli"
+    "@chriskalmar/entourage-cli": "./bin/entourage-cli",
+    "entourage-cli": "./bin/entourage-cli"
   },
   "scripts": {
     "clean": "rimraf lib",
