@@ -15,7 +15,7 @@ WORKDIR /app
 COPY . /app/
 
 RUN npm install \
-  && npm build
+  && npm run build
 
 EXPOSE 5858
 
