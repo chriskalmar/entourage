@@ -4,7 +4,6 @@
   "description": "Client for entourage",
   "main": "lib/",
   "bin": {
-    "@chriskalmar/entourage-cli": "./bin/entourage-cli.js",
     "entourage-cli": "./bin/entourage-cli.js"
   },
   "scripts": {
