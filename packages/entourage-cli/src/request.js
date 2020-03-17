@@ -28,6 +28,6 @@ export const request = async ({ config, query, variables }) => {
       console.error(e.message);
     }
 
-    process.exit(1);
+    return process.exit(1);
   }
 };

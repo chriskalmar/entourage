@@ -1,13 +1,11 @@
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
 import { request } from './request';
+import { subscribe, eventBus } from './subscribe';
 import { printProgressDots, sleep } from './util';
 
 const waitRequestInterval = 5000;
 const defaultTimeout = 120000;
-
-axios.defaults.headers.post['Content-Type'] = 'application/json';
 
 const readConfig = configPath => {
   if (!fs.existsSync(configPath)) {
@@ -63,20 +61,49 @@ export const init = async argv => {
   });
 };
 
-const checkReadyness = async ({ config, versionName }) => {
-  const result = await request({
+// const checkReadyness = async ({ config, versionName }) => {
+//   const result = await request({
+//     config,
+//     query: `
+//       query getProfileStats(
+//         $version: String!
+//         $profile: String!
+//       ) {
+//         getProfileStats(
+//           version: $version
+//           profile: $profile
+//         ) {
+//           ready
+//           healthy
+//         }
+//       }
+//     `,
+//     variables: {
+//       profile: config.profile,
+//       version: versionName,
+//     },
+//   });
+
+//   const {
+//     getProfileStats: { ready, healthy },
+//   } = result;
+
+//   return ready && healthy;
+// };
+
+const onReadyListener = ({ config, versionName, eventName }) => {
+  const wsClient = subscribe({
     config,
     query: `
-      query getProfileStats(
+      subscription profileCreated(
         $version: String!
         $profile: String!
       ) {
-        getProfileStats(
+        profileCreated(
           version: $version
           profile: $profile
         ) {
           ready
-          healthy
         }
       }
     `,
@@ -84,13 +111,9 @@ const checkReadyness = async ({ config, versionName }) => {
       profile: config.profile,
       version: versionName,
     },
+    eventName,
   });
-
-  const {
-    getProfileStats: { ready, healthy },
-  } = result;
-
-  return ready && healthy;
+  return wsClient;
 };
 
 export const wait = async argv => {
@@ -102,12 +125,24 @@ export const wait = async argv => {
   let ready = false;
   let timedout = false;
 
+  // create subscription
+  const eventName = `${config.profile}-${versionName}-ready`;
+
+  const wsClient = onReadyListener({ config, versionName, eventName });
+
+  eventBus.addListener(eventName, data => {
+    ready = data.profileCreated.ready;
+    wsClient.close();
+  });
+
   const timeoutFn = setTimeout(() => {
+    eventBus.removeListener(eventName);
+    wsClient.close();
     timedout = true;
   }, config.timeout);
 
   while (!ready && !timedout) {
-    ready = await checkReadyness({ config, versionName });
+    // ready = await checkReadyness({ config, versionName });
     await sleep(waitRequestInterval);
   }
 
@@ -122,6 +157,36 @@ export const wait = async argv => {
     console.error('Error: Profile is not ready');
     process.exit(1);
   }
+};
+
+export const destroy = async argv => {
+  const config = readConfig(argv.file);
+  checkConfig(config);
+  //   console.log(JSON.stringify(argv, null, 2));
+
+  console.log(`Contacting entourage server at ${config.url} ...`);
+
+  request({
+    config,
+    query: `
+      mutation destroyProfile(
+        $version: String!
+        $profile: String!
+      ) {
+        destroyProfile(
+          version: $version
+          profile: $profile
+          asyncMode: true
+        ) {
+          version
+        }
+      }
+    `,
+    variables: {
+      profile: config.profile,
+      version: argv.versionName,
+    },
+  });
 };
 
 export const env = async argv => {
