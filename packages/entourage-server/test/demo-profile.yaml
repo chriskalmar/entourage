@@ -9,6 +9,7 @@ renderTemplates:
   targetPath: .
   files:
     - <%= __PROFILE %>.init-db.sh
+    - <%= __PROFILE %>.stop-db.sh
     - <%= __PROFILE %>.docker-compose.yaml
     - <%= __PROFILE %>.env
 
@@ -16,6 +17,11 @@ prepare:
   timeout: 90
   script:
     - . <%= __PROFILE %>.init-db.sh
+
+beforeDestroy:
+  timeout: 90
+  script:
+    - . <%= __PROFILE %>.stop-db.sh
 
 docker:
   composeFile: <%= __PROFILE %>.docker-compose.yaml

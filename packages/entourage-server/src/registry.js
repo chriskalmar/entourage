@@ -18,6 +18,13 @@ export const getWorkVersionConfig = config => {
   return registry[key];
 };
 
+export const removeWorkVersionConfig = config => {
+  const { profile, version } = config;
+  const key = `${profile}-${version}`;
+
+  delete registry[key];
+};
+
 export const initRegistry = () => {
   const workPath = path.basename(process.env.WORK_PATH);
 

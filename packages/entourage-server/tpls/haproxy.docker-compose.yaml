@@ -7,7 +7,7 @@ services:
       - <%= workFolder %>/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro <%
     if (hostPorts.length) { %>
     ports: <% }
-     _.forEach(hostPorts, function(port) {%>
+      _.forEach(hostPorts, function(port) {%>
       - '<%= port %>:<%= port %>'<%
     }) %>
     networks:

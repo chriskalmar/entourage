@@ -1,59 +1,12 @@
+import { Server as Broker } from 'aedes';
 import { GraphQLServer } from 'graphql-yoga';
-import GraphQLJSON from 'graphql-type-json';
-import { initProfile } from './profile';
-import { createWorkPathFolder, printTask } from './util';
+import { createServer } from 'net';
 import { createDockerNetwork } from './docker';
-import { getProfileStats, getProfileConfig } from './stats';
+import { resolvers, typeDefs } from './graphql';
+import pubsub from './pubsub';
 import { initRegistry } from './registry';
-import { log } from 'util';
+import { createWorkPathFolder, printTask, log } from './util';
 import { restartProxy, updateProxyConfig } from './proxy';
-
-const typeDefs = `
-  scalar JSON
-
-  type ProfileState {
-    timestamp: String!
-    version: String!
-    profile: String!
-    params: JSON!
-    docker: JSON!
-    ready: Boolean!
-    healthy: Boolean!
-    ports: JSON
-    stats: JSON
-  }
-
-  type Query {
-    getProfileStats(
-      version: String!
-      profile: String!
-    ): ProfileState!
-  }
-
-  type Mutation {
-    initProfile(
-      version: String!
-      profile: String!
-      params: JSON!
-      asyncMode: Boolean
-    ): ProfileState!
-  }
-`;
-
-const resolvers = {
-  Query: {
-    getProfileStats: (_, { profile, version }) =>
-      getProfileConfig(profile, version),
-  },
-  ProfileState: {
-    stats: ({ profile, version }) => getProfileStats(profile, version),
-  },
-  Mutation: {
-    initProfile: (_, { profile, params, version, asyncMode }) =>
-      initProfile(profile, params, version, asyncMode),
-  },
-  JSON: GraphQLJSON,
-};
 
 createDockerNetwork();
 createWorkPathFolder();
@@ -67,5 +20,56 @@ updateProxyConfig();
 printTask('Restarting proxy');
 restartProxy();
 
-const server = new GraphQLServer({ typeDefs, resolvers });
-server.start(() => log(`Server is running on port ${process.env.PORT} ... 🚀`));
+// MQTT Broker
+const brokerConf = {
+  concurrency: 100,
+  // authenticate,
+  // published,
+  // authorizePublish,
+  // authorizeSubscribe,
+};
+
+const broker = new Broker(brokerConf);
+
+const tcpServer = createServer(broker.handle).listen(
+  +process.env.MQTT_PORT,
+  () => {
+    log(`Broker is running on port ${process.env.MQTT_PORT} ... 🚀`);
+  },
+);
+
+broker.on('client', client => {
+  log(`MQTT onConnect ${client ? client.id : null}`);
+});
+
+broker.on('clientDisconnect', client => {
+  log(`MQTT onDisconnect ${client ? client.id : null}`);
+});
+
+broker.once('closed', () => {
+  tcpServer.close();
+  log('MQTT Broker has been stopped');
+});
+
+// HTTP Server
+const serverOptions = {
+  port: +process.env.PORT,
+  endpoint: '/',
+  subscriptions: {
+    path: '/',
+    onConnect: (params, socket, context) => {
+      log(`WS onConnect ${JSON.stringify(params)}`);
+      return context;
+    },
+    onDisconnect: (socket, context) => {
+      log('WS onDisconnect');
+      return context;
+    },
+  },
+  playground: false,
+};
+
+const server = new GraphQLServer({ typeDefs, resolvers, context: { pubsub } });
+server.start(serverOptions, () =>
+  log(`Server is running on port ${process.env.PORT} ... 🚀`),
+);

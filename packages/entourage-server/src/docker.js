@@ -154,6 +154,35 @@ export const runWorkVersionDockerComposeFile = async (version, config) => {
   return runDockerComposeFile(workVersionFolder, filePath);
 };
 
+export const downDockerComposeFile = async (cwd, filePath, clean = false) => {
+  try {
+    const params = {
+      cwd,
+      config: filePath,
+      log: true,
+    };
+    if (clean) {
+      params.commamdOptions = '-v --rmi all --remove-orphans';
+    }
+    await compose.down(params);
+  } catch (error) {
+    throw new Error(error.err);
+  }
+};
+
+export const downWorkVersionDockerComposeFile = async (
+  version,
+  config,
+  clean = false,
+) => {
+  const filePath = config.composeFile;
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  checkDockerComposeFileExists(workVersionFolder, filePath);
+
+  return downDockerComposeFile(workVersionFolder, filePath, clean);
+};
+
 export const createDockerNetwork = async () => {
   const docker = new Docker({});
 

@@ -4,6 +4,48 @@
 
 See repository page [chriskalmar/entourage](https://github.com/chriskalmar/entourage) for more information.
 
+## Profiles
+
+Create a `profiles` folder that will be shared with docker container.
+
+### Profile template
+
+At the root create a yml | yaml template like [demo-profile-1.yaml](./test/demo-profile.yaml).
+You can use `defaults`->`params` to declare default params that will be used to fill out template files declared in `renderTemplates`.
+
+Still at the root, create a folder with the same name that will contain your templates (`sourcePath`) and the files rendered by your templates (`targetPath`).
+
+These files will be parsed and variables will be replaced by your default params and those that will be passed to entourage-server API.
+
+```
+.
++-- demo-profile-1
+|   +-- init-db.sh *
+|   +-- stop-db.sh *
+|   +-- docker-compose.yaml *
+|   +-- env *
+|   +-- templates
+|   |   +-- init-db.sh
+|   |   +-- stop-db.sh
+|   |   +-- docker-compose.yaml
+|   |   +-- env
++-- demo-profile-1.yaml
+
+* created after rendering
+```
+
+#### Profile hooks
+
+- `prepare`
+- `beforeDestroy`
+
+These hooks allows you to declare a `script` that will be executed before the environment will be started / destroyed.
+Optionally fill the `timeout` field that will allow the entourage-server to kill the process after duration has passed.
+
+#### Docker
+
+`docker` field allows to declare the path of your `composeFile`.
+
 ## Setup
 
 Run entourage server as a privileged docker container and provide a profiles folder and a work folder as volume mounts:
@@ -24,7 +66,7 @@ docker run -d --name entourage \
 create a file named `docker-compose.yml`:
 
 ```yaml
-version: "3"
+version: '3'
 
 services:
   entourage:
@@ -36,11 +78,11 @@ services:
       - ./profiles:/app/profiles
       - ./work:/app/work
     ports:
-      - "5858:5858"
-
+      - '5858:5858'
 ```
 
 and run it with:
+
 ```sh
 docker-compose up -d
 ```
