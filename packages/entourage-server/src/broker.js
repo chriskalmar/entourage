@@ -7,10 +7,14 @@ import { log } from './util';
  */
 
 /**
+ * @typedef Aedes
+ */
+
+/**
  * Start MQTT broker
  *
  * @method module:Broker~initBroker
- * @returns {objet} broker
+ * @returns {Aedes}
  */
 export const initBroker = () => {
   const brokerConf = {

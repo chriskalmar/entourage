@@ -8,10 +8,14 @@ import { log } from './util';
  */
 
 /**
+ * @typedef GraphQLServer
+ */
+
+/**
  * Start GraphQL HTTP/WS server
  *
  * @method module:Server~initServer
- * @returns {objet} server
+ * @returns {GraphQLServer}
  */
 export const initServer = () => {
   const serverOptions = {

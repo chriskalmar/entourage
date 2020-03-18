@@ -49,6 +49,120 @@ Optionally fill the `timeout` field that will allow the entourage-server to kill
 
 `docker` field allows to declare the path of your `composeFile`.
 
+## GraphQL API
+
+### createProfile
+
+```graphql
+mutation createProfile($version: String!, $profile: String!, $params: JSON!) {
+  initProfile(version: $version, profile: $profile, params: $params) {
+    profile
+    version
+    ready
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile",
+  "params": {
+    "NODE_ENV": "development",
+    "HOST": "mqtt-api",
+    "MQTT_PORT": "1883",
+    "WS_PORT": "3000"
+  }
+}
+```
+
+### profileCreated
+
+```graphql
+subscription watchProfileCreated($version: String!, $profile: String!) {
+  profileCreated(version: $version, profile: $profile) {
+    profile
+    version
+    ports
+    ready
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
+### getProfileStats
+
+```graphql
+query getProfileStats($version: String!, $profile: String!) {
+  getProfileStats(version: $version, profile: $profile) {
+    version
+    ready
+    profile
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
+### destroyProfile
+
+```graphql
+mutation destroyProfile($version: String!, $profile: String!, $params: JSON!) {
+  destroyProfile(version: $version, profile: $profile, params: $params) {
+    profile
+    version
+    ready
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile",
+  "params": {
+    "NODE_ENV": "development",
+    "HOST": "mqtt-api",
+    "MQTT_PORT": "1883",
+    "WS_PORT": "3000"
+  }
+}
+```
+
+### profileDestroyed
+
+```graphql
+subscription watchProfileDestroyed($version: String!, $profile: String!) {
+  profileDestroyed(version: $version, profile: $profile) {
+    profile
+    version
+    ports
+    ready
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
 ## Setup
 
 Run entourage server as a privileged docker container and provide a profiles folder and a work folder as volume mounts:
@@ -100,6 +214,8 @@ docker-compose up -d
 <dd></dd>
 <dt><a href="#module_Docker">Docker</a></dt>
 <dd></dd>
+<dt><a href="#module_GraphQL">GraphQL</a></dt>
+<dd></dd>
 <dt><a href="#module_Template">Template</a></dt>
 <dd></dd>
 <dt><a href="#module_Proxy">Proxy</a></dt>
@@ -125,13 +241,21 @@ docker-compose up -d
 <a name="module_Broker"></a>
 
 ## Broker
+
+* [Broker](#module_Broker)
+    * [~initBroker()](#module_Broker..initBroker) ⇒ <code>Aedes</code>
+    * [~Aedes](#module_Broker..Aedes)
+
 <a name="module_Broker..initBroker"></a>
 
-### Broker~initBroker() ⇒ <code>objet</code>
+### Broker~initBroker() ⇒ <code>Aedes</code>
 Start MQTT broker
 
 **Kind**: inner method of [<code>Broker</code>](#module_Broker)  
-**Returns**: <code>objet</code> - broker  
+<a name="module_Broker..Aedes"></a>
+
+### Broker~Aedes
+**Kind**: inner typedef of [<code>Broker</code>](#module_Broker)  
 <a name="module_Docker"></a>
 
 ## Docker
@@ -335,6 +459,135 @@ Get docker-compose mountpoint
 
 - Cannot detect work folder mount point. Are you running Entourage server via docker?
 
+<a name="module_GraphQL"></a>
+
+## GraphQL
+
+* [GraphQL](#module_GraphQL)
+    * [~ProfileState](#module_GraphQL..ProfileState) : <code>GraphQLType</code>
+    * [~Query](#module_GraphQL..Query) : <code>GraphQLType</code>
+    * [~getProfileStats](#module_GraphQL..getProfileStats) ⇒ <code>GraphQLType</code>
+    * [~Mutation](#module_GraphQL..Mutation) : <code>GraphQLType</code>
+    * [~initProfile](#module_GraphQL..initProfile) ⇒ <code>GraphQLType</code>
+    * [~destroyProfile](#module_GraphQL..destroyProfile) ⇒ <code>GraphQLType</code>
+    * [~Subscriptions](#module_GraphQL..Subscriptions) : <code>GraphQLType</code>
+    * [~profileCreated](#module_GraphQL..profileCreated) ⇒ <code>GraphQLType</code>
+    * [~profileDestroyed](#module_GraphQL..profileDestroyed) ⇒ <code>GraphQLType</code>
+
+<a name="module_GraphQL..ProfileState"></a>
+
+### GraphQL~ProfileState : <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| timestamp | <code>string</code> | 
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+| params | <code>object</code> | 
+| docker | <code>object</code> | 
+| ready | <code>boolean</code> | 
+| healthy | <code>boolean</code> | 
+| ports | <code>object</code> | 
+| stats | <code>object</code> | 
+
+<a name="module_GraphQL..Query"></a>
+
+### GraphQL~Query : <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| getProfileStats | <code>GraphQLQuery</code> | 
+
+<a name="module_GraphQL..getProfileStats"></a>
+
+### GraphQL~getProfileStats ⇒ <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Returns**: <code>GraphQLType</code> - ProfileState  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+
+<a name="module_GraphQL..Mutation"></a>
+
+### GraphQL~Mutation : <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| initProfile | <code>GraphQLMutation</code> | 
+| destroyProfile | <code>GraphQLMutation</code> | 
+
+<a name="module_GraphQL..initProfile"></a>
+
+### GraphQL~initProfile ⇒ <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Returns**: <code>GraphQLType</code> - ProfileState  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+| params | <code>object</code> | 
+| [asyncMode] | <code>boolean</code> | 
+
+<a name="module_GraphQL..destroyProfile"></a>
+
+### GraphQL~destroyProfile ⇒ <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Returns**: <code>GraphQLType</code> - ProfileState  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+| params | <code>object</code> | 
+| [asyncMode] | <code>boolean</code> | 
+
+<a name="module_GraphQL..Subscriptions"></a>
+
+### GraphQL~Subscriptions : <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| profileCreated | <code>GraphQLSubscription</code> | 
+| profileDestroyed | <code>GraphQLSubscription</code> | 
+
+<a name="module_GraphQL..profileCreated"></a>
+
+### GraphQL~profileCreated ⇒ <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Returns**: <code>GraphQLType</code> - ProfileState  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+
+<a name="module_GraphQL..profileDestroyed"></a>
+
+### GraphQL~profileDestroyed ⇒ <code>GraphQLType</code>
+**Kind**: inner constant of [<code>GraphQL</code>](#module_GraphQL)  
+**Returns**: <code>GraphQLType</code> - ProfileState  
+**Properties**
+
+| Name | Type |
+| --- | --- |
+| version | <code>string</code> | 
+| profile | <code>string</code> | 
+
 <a name="module_Template"></a>
 
 ## Template
@@ -536,13 +789,21 @@ Optional timeout to kill the process
 <a name="module_Server"></a>
 
 ## Server
+
+* [Server](#module_Server)
+    * [~initServer()](#module_Server..initServer) ⇒ <code>GraphQLServer</code>
+    * [~GraphQLServer](#module_Server..GraphQLServer)
+
 <a name="module_Server..initServer"></a>
 
-### Server~initServer() ⇒ <code>objet</code>
+### Server~initServer() ⇒ <code>GraphQLServer</code>
 Start GraphQL HTTP/WS server
 
 **Kind**: inner method of [<code>Server</code>](#module_Server)  
-**Returns**: <code>objet</code> - server  
+<a name="module_Server..GraphQLServer"></a>
+
+### Server~GraphQLServer
+**Kind**: inner typedef of [<code>Server</code>](#module_Server)  
 <a name="module_Stats"></a>
 
 ## Stats

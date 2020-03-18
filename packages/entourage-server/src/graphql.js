@@ -2,6 +2,97 @@ import GraphQLJSON from 'graphql-type-json';
 import { initProfile, destroyProfile } from './profile';
 import { getProfileStats, getProfileConfig } from './stats';
 
+/**
+ * @module GraphQL
+ */
+
+/**
+ * @typedef {GraphQLType}
+ * @typedef {GraphQLQuery}
+ * @typedef {GraphQLMutation}
+ * @typedef {GraphQLSubscription}
+ * @typedef {GraphQLSubscriptionResolver}
+ * @typedef {GraphQLSubscriptionResolver}
+ */
+
+/**
+ * @type {GraphQLType}
+ * @const ProfileState
+ * @property {string} timestamp
+ * @property {string} version
+ * @property {string} profile
+ * @property {object} params
+ * @property {object} docker
+ * @property {boolean} ready
+ * @property {boolean} healthy
+ * @property {object} ports
+ * @property {object} stats
+ */
+
+/**
+ * @type {GraphQLType}
+ * @const Query
+ * @property {GraphQLQuery} getProfileStats
+ */
+
+/**
+ * @type {GraphQLQuery}
+ * @const getProfileStats
+ * @property {string} version
+ * @property {string} profile
+ * @returns {GraphQLType} ProfileState
+ */
+
+/**
+ * @type {GraphQLType}
+ * @const Mutation
+ * @property {GraphQLMutation} initProfile
+ * @property {GraphQLMutation} destroyProfile
+ */
+
+/**
+ * @type {GraphQLMutation}
+ * @const initProfile
+ * @property {string} version
+ * @property {string} profile
+ * @property {object} params
+ * @property {boolean} [asyncMode]
+ * @returns {GraphQLType} ProfileState
+ */
+
+/**
+ * @type {GraphQLMutation}
+ * @const destroyProfile
+ * @property {string} version
+ * @property {string} profile
+ * @property {object} params
+ * @property {boolean} [asyncMode]
+ * @returns {GraphQLType} ProfileState
+ */
+
+/**
+ * @type {GraphQLType}
+ * @const Subscriptions
+ * @property {GraphQLSubscription} profileCreated
+ * @property {GraphQLSubscription} profileDestroyed
+ */
+
+/**
+ * @type {GraphQLSubscription}
+ * @const profileCreated
+ * @property {string} version
+ * @property {string} profile
+ * @returns {GraphQLType} ProfileState
+ */
+
+/**
+ * @type {GraphQLSubscription}
+ * @const profileDestroyed
+ * @property {string} version
+ * @property {string} profile
+ * @returns {GraphQLType} ProfileState
+ */
+
 export const typeDefs = `
 scalar JSON
 

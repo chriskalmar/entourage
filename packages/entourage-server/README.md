@@ -46,6 +46,120 @@ Optionally fill the `timeout` field that will allow the entourage-server to kill
 
 `docker` field allows to declare the path of your `composeFile`.
 
+## GraphQL API
+
+### createProfile
+
+```graphql
+mutation createProfile($version: String!, $profile: String!, $params: JSON!) {
+  initProfile(version: $version, profile: $profile, params: $params) {
+    profile
+    version
+    ready
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile",
+  "params": {
+    "NODE_ENV": "development",
+    "HOST": "mqtt-api",
+    "MQTT_PORT": "1883",
+    "WS_PORT": "3000"
+  }
+}
+```
+
+### profileCreated
+
+```graphql
+subscription watchProfileCreated($version: String!, $profile: String!) {
+  profileCreated(version: $version, profile: $profile) {
+    profile
+    version
+    ports
+    ready
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
+### getProfileStats
+
+```graphql
+query getProfileStats($version: String!, $profile: String!) {
+  getProfileStats(version: $version, profile: $profile) {
+    version
+    ready
+    profile
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
+### destroyProfile
+
+```graphql
+mutation destroyProfile($version: String!, $profile: String!, $params: JSON!) {
+  destroyProfile(version: $version, profile: $profile, params: $params) {
+    profile
+    version
+    ready
+    ports
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile",
+  "params": {
+    "NODE_ENV": "development",
+    "HOST": "mqtt-api",
+    "MQTT_PORT": "1883",
+    "WS_PORT": "3000"
+  }
+}
+```
+
+### profileDestroyed
+
+```graphql
+subscription watchProfileDestroyed($version: String!, $profile: String!) {
+  profileDestroyed(version: $version, profile: $profile) {
+    profile
+    version
+    ports
+    ready
+  }
+}
+```
+
+```js
+{
+  "version" : "1",
+  "profile": "demo-profile"
+}
+```
+
 ## Setup
 
 Run entourage server as a privileged docker container and provide a profiles folder and a work folder as volume mounts:
@@ -58,6 +172,7 @@ docker run -d --name entourage \
   -v $PWD/profiles:/app/profiles \
   -v $PWD/work:/app/work \
   -p 5858:5858 \
+  -p 4242:4242 \
   chriskalmar/entourage:latest
 ```
 
@@ -71,14 +186,13 @@ version: '3'
 services:
   entourage:
     image: chriskalmar/entourage:latest
-    environment:
-      - PGDATA=/usr/local/pgsql/data
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./profiles:/app/profiles
       - ./work:/app/work
     ports:
       - '5858:5858'
+      - '4242:4242'
 ```
 
 and run it with:
