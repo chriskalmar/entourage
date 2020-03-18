@@ -91,31 +91,6 @@ export const init = async argv => {
 //   return ready && healthy;
 // };
 
-const onReadyListener = ({ config, versionName, eventName }) => {
-  const wsClient = subscribe({
-    config,
-    query: `
-      subscription profileCreated(
-        $version: String!
-        $profile: String!
-      ) {
-        profileCreated(
-          version: $version
-          profile: $profile
-        ) {
-          ready
-        }
-      }
-    `,
-    variables: {
-      profile: config.profile,
-      version: versionName,
-    },
-    eventName,
-  });
-  return wsClient;
-};
-
 export const wait = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
@@ -125,19 +100,23 @@ export const wait = async argv => {
   let ready = false;
   let timedout = false;
 
-  // create subscription
-  const eventName = `${config.profile}-${versionName}-ready`;
+  const eventName = `profileCreated/${config.profile}/${versionName}`;
+  console.log(`Waiting entourage server response at ${config.wsUrl} ...`);
 
-  const wsClient = onReadyListener({ config, versionName, eventName });
+  const client = subscribe({
+    config,
+    eventName,
+  });
 
   eventBus.addListener(eventName, data => {
-    ready = data.profileCreated.ready;
-    wsClient.close();
+    // console.log('message received :', args);
+    ready = data.ready;
+    client.end(true);
   });
 
   const timeoutFn = setTimeout(() => {
     eventBus.removeListener(eventName);
-    wsClient.close();
+    client.end(true);
     timedout = true;
   }, config.timeout);
 
@@ -162,7 +141,6 @@ export const wait = async argv => {
 export const destroy = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
-  //   console.log(JSON.stringify(argv, null, 2));
 
   console.log(`Contacting entourage server at ${config.url} ...`);
 
@@ -172,10 +150,12 @@ export const destroy = async argv => {
       mutation destroyProfile(
         $version: String!
         $profile: String!
+        $params: JSON!
       ) {
         destroyProfile(
           version: $version
           profile: $profile
+          params: $params
           asyncMode: true
         ) {
           version
@@ -185,6 +165,7 @@ export const destroy = async argv => {
     variables: {
       profile: config.profile,
       version: argv.versionName,
+      params: config.params || {},
     },
   });
 };
