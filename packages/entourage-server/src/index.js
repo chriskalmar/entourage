@@ -4,9 +4,9 @@ import { createServer } from 'net';
 import { createDockerNetwork } from './docker';
 import { resolvers, typeDefs } from './graphql';
 import pubsub from './pubsub';
+import { restartProxy, updateProxyConfig } from './proxy';
 import { initRegistry } from './registry';
 import { createWorkPathFolder, printTask, log } from './util';
-import { restartProxy, updateProxyConfig } from './proxy';
 
 createDockerNetwork();
 createWorkPathFolder();
@@ -44,6 +44,17 @@ broker.on('client', client => {
 
 broker.on('clientDisconnect', client => {
   log(`MQTT onDisconnect ${client ? client.id : null}`);
+});
+
+broker.on('publish', (packet, client) => {
+  if (packet.topic.startsWith('$SYS')) {
+    return;
+  }
+  log(`MQTT onPublish ${client ? client.id : null}`);
+});
+
+broker.on('subscribe', (subscriptions, client) => {
+  log(`MQTT onSubscribe ${client ? client.id : null}`);
 });
 
 broker.once('closed', () => {

@@ -10,26 +10,26 @@ Create a `profiles` folder that will be shared with docker container.
 
 ### Profile template
 
-At the root create a yml | yaml template like [demo-profile-1.yaml](./test/demo-profile.yaml).
+At the root of `profiles`, create a yml | yaml template like [demo-profile.yaml](./test/demo-profile.yaml).
 You can use `defaults`->`params` to declare default params that will be used to fill out template files declared in `renderTemplates`.
 
-Still at the root, create a folder with the same name that will contain your templates (`sourcePath`) and the files rendered by your templates (`targetPath`).
+Still at the root, create a folder that will contain your templates (`sourcePath`) and another one called <profile name> that will contain the files rendered (`targetPath`).
 
-These files will be parsed and variables will be replaced by your default params and those that will be passed to entourage-server API.
+These templates will be parsed and variables will be replaced by your default params and those that will be passed to entourage-server API.
 
 ```
 .
-+-- demo-profile-1
++-- demo-profile
 |   +-- init-db.sh *
 |   +-- stop-db.sh *
 |   +-- docker-compose.yaml *
 |   +-- env *
-|   +-- templates
-|   |   +-- init-db.sh
-|   |   +-- stop-db.sh
-|   |   +-- docker-compose.yaml
-|   |   +-- env
-+-- demo-profile-1.yaml
++-- templates
+|   +-- demo-profile.init-db.sh
+|   +-- demo-profile.stop-db.sh
+|   +-- demo-profile.docker-compose.yaml
+|   +-- demo-profile.env
++-- demo-profile.yaml
 
 * created after rendering
 ```

@@ -71,10 +71,12 @@ export const resolvers = {
     profileCreated: {
       subscribe: (_, { profile, version }, { pubsub }) =>
         pubsub.asyncIterator(`profileCreated/${profile}/${version}`),
+      resolve: payload => payload,
     },
     profileDestroyed: {
       subscribe: (_, { profile, version }, { pubsub }) =>
         pubsub.asyncIterator(`profileDestroyed/${profile}/${version}`),
+      resolve: payload => payload,
     },
   },
   JSON: GraphQLJSON,

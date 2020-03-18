@@ -7,7 +7,7 @@ import {
   downWorkVersionDockerComposeFile,
 } from './docker';
 import { updateProxyConfig, restartProxy } from './proxy';
-import { pubsub } from './pubsub';
+import pubsub from './pubsub';
 import { renderFile } from './render';
 import { executeScripts } from './script';
 import {
@@ -47,7 +47,12 @@ const getProfileFilename = profile => {
   return profileFilename;
 };
 
-export const initProfile = async (profile, params, version, asyncMode) => {
+export const initProfile = async (
+  profile,
+  params,
+  version,
+  asyncMode = true,
+) => {
   const profileFilename = getProfileFilename(profile);
 
   let templateParams = {
@@ -180,9 +185,14 @@ export const initProfile = async (profile, params, version, asyncMode) => {
   return getWorkVersionConfig(versionConfig);
 };
 
-export const destroyProfile = async (profile, params, version, asyncMode) => {
+export const destroyProfile = async (
+  profile,
+  params,
+  version,
+  asyncMode = true,
+) => {
   printTask('destroyProfile - Work in progress');
-  const versionConfig = await getProfileConfig({ profile, version });
+  const versionConfig = await getProfileConfig(profile, version);
 
   const profileFilename = getProfileFilename(profile);
   const templateParams = {
@@ -236,11 +246,11 @@ export const destroyProfile = async (profile, params, version, asyncMode) => {
     deleteWorkVersionFolder(version);
     removeWorkVersionConfig(versionConfig);
 
-    printTask('Updating proxy');
-    updateProxyConfig();
+    // printTask('Updating proxy');
+    // updateProxyConfig();
 
-    printTask('Restarting proxy');
-    restartProxy();
+    // printTask('Restarting proxy');
+    // restartProxy();
 
     const eventName = `profileDestroyed/${profile}/${version}`;
     printTask(`Send ${eventName} event`);
