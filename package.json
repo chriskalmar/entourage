@@ -12,7 +12,7 @@
     "docs:modules:server": "cp ./packages/entourage-server/README.md ./docs/server/1.md ; ./node_modules/.bin/jsdoc2md ./packages/entourage-server/src/* > ./docs/server/2.md",
     "docs:concat:server": "./node_modules/.bin/concat-md docs/server > ./docs/server/README.md ; rm ./docs/server/1.md ; rm ./docs/server/2.md",
     "docs:server": "npm run docs:modules:server ; npm run docs:concat:server",
-    "docs:readme" :"cp ./README.md ./docs/readme/README.md",
+    "docs:readme": "cp ./README.md ./docs/readme/README.md",
     "docs:dev": "npm run docs:readme ; npm run docs:cli ; npm run docs:server ; ./node_modules/.bin/vuepress dev docs",
     "docs:build": "npm run docs:readme ; npm run docs:cli ; npm run docs:server ; NODE_ENV=production ./node_modules/.bin/vuepress build docs",
     "docs:serve": "light-server -s public -p 7000 --servePrefix /entourage/"
@@ -52,6 +52,7 @@
     "jest": "^25.0.1",
     "jsdoc-to-markdown": "^5.0.3",
     "lerna": "^3.20.1",
+    "light-server": "^2.6.4",
     "lint-staged": "^10.0.0",
     "nodemon": "^2.0.1",
     "prettier": "^1.19.1",
