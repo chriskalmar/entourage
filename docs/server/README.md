@@ -175,6 +175,7 @@ docker run -d --name entourage \
   -v $PWD/profiles:/app/profiles \
   -v $PWD/work:/app/work \
   -p 5858:5858 \
+  -p 4242:4242 \
   chriskalmar/entourage:latest
 ```
 
@@ -188,14 +189,13 @@ version: '3'
 services:
   entourage:
     image: chriskalmar/entourage:latest
-    environment:
-      - PGDATA=/usr/local/pgsql/data
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./profiles:/app/profiles
       - ./work:/app/work
     ports:
       - '5858:5858'
+      - '4242:4242'
 ```
 
 and run it with:

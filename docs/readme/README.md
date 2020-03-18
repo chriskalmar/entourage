@@ -26,4 +26,5 @@ Check package details page of [entourage-cli](https://github.com/chriskalmar/ent
 - [ ] provide functionality to run health checks
 - [ ] implement container clean-up process (garbage collection)
 - [ ] lock versions
+- [ ] protect HTTP / WS / MQTT access with authentification
 - [ ] persist server registry in redis ?
