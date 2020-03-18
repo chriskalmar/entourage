@@ -2,8 +2,36 @@ import EventEmitter from 'events';
 import { MQTTPubSub } from 'graphql-mqtt-subscriptions';
 import { connect } from 'mqtt';
 
+/**
+ * @module Subscribe
+ */
+
+/**
+ * @typedef EventEmitter
+ */
+
+/**
+ * @typedef MQTTClient
+ */
+
+/**
+ * @type {EventEmitter}
+ * @const eventBus
+ */
 export const eventBus = new EventEmitter();
 
+/**
+ * Create a subscription
+ *
+ * Send an event back onMessage
+ *
+ * @method module:Subscribe~subscribe
+ * @param {object} sub
+ * @property {object} sub.config
+ * @property {string} sub.eventName
+ * @emits eventName
+ * @returns {MQTTClient}
+ */
 export const subscribe = ({ config, eventName }) => {
   const client = connect(config.wsUrl, {
     reconnectPeriod: 1000,

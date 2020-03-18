@@ -7,6 +7,18 @@ import { printProgressDots, sleep } from './util';
 const waitRequestInterval = 5000;
 const defaultTimeout = 120000;
 
+/**
+ * @module Command
+ */
+
+/**
+ * Read config file (JS | JSON)
+ *
+ * @method module:Command~readConfig
+ * @param {string} configPath
+ * @returns {objet} config
+ * @throws Config file X not found
+ */
 const readConfig = configPath => {
   if (!fs.existsSync(configPath)) {
     throw new Error(`Config file '${configPath}' not found`);
@@ -17,6 +29,16 @@ const readConfig = configPath => {
   return typeof content === 'function' ? content() : content;
 };
 
+/**
+ * Check config content
+ *
+ * Validate url, profile and timeout presence
+ *
+ * @method module:Command~checkConfig
+ * @param {object} config
+ * @returns {boolean}
+ * @throws Invalid config
+ */
 export const checkConfig = config => {
   if (typeof config === 'object') {
     config.timeout = Number(config.timeout || defaultTimeout);
@@ -29,6 +51,14 @@ export const checkConfig = config => {
   throw new Error('Invalid config');
 };
 
+/**
+ * Init command
+ *
+ * Trigger initProfile mutation on entourage-server
+ *
+ * @method module:Command~init
+ * @param {object} argv
+ */
 export const init = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
@@ -91,6 +121,14 @@ export const init = async argv => {
 //   return ready && healthy;
 // };
 
+/**
+ * Wait command
+ *
+ * Trigger profileCreated subscription on entourage-server
+ *
+ * @method module:Command~wait
+ * @param {object} argv
+ */
 export const wait = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
@@ -138,6 +176,14 @@ export const wait = async argv => {
   }
 };
 
+/**
+ * Destroy command
+ *
+ * Trigger destroyProfile mutation on entourage-server
+ *
+ * @method module:Command~destroy
+ * @param {object} argv
+ */
 export const destroy = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
@@ -170,6 +216,14 @@ export const destroy = async argv => {
   });
 };
 
+/**
+ * Env command
+ *
+ * Trigger getProfileStats query on entourage-server
+ *
+ * @method module:Command~env
+ * @param {object} argv
+ */
 export const env = async argv => {
   const config = readConfig(argv.file);
   checkConfig(config);
