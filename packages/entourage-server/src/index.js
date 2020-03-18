@@ -54,7 +54,13 @@ broker.on('publish', (packet, client) => {
 });
 
 broker.on('subscribe', (subscriptions, client) => {
-  log(`MQTT onSubscribe ${client ? client.id : null}`);
+  log(
+    `MQTT onSubscribe ${
+      Array.isArray(subscriptions)
+        ? subscriptions.map(sub => sub.topic).join(', ')
+        : subscriptions.topic
+    } ${client ? client.id : null}`,
+  );
 });
 
 broker.once('closed', () => {
