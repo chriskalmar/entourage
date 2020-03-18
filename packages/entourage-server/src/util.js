@@ -4,20 +4,47 @@ import rimraf from 'rimraf';
 import portfinder from 'portfinder';
 import { snakeCase } from 'lodash';
 
+/**
+ * @module Utils
+ */
+
+/**
+ * Log a message
+ * @method module:Utils~log
+ * @param {any} msg
+ * @returns {function} console.log
+ */
 // eslint-disable-next-line no-console
 export const log = msg => console.log(msg);
 
+/**
+ * Create a work folder from WORK_PATH environement variable
+ * @method module:Utils~createWorkPathFolder
+ * @param {string} version
+ */
 export const createWorkPathFolder = () => {
   if (!fs.existsSync(path.basename(process.env.WORK_PATH))) {
     fs.mkdirSync(path.basename(process.env.WORK_PATH), { recursive: true });
   }
 };
 
+/**
+ * Get a work sub folder name from the version and WORK_PATH environement variable
+ * @method module:Utils~getWorkVersionFolder
+ * @param {string} version
+ * @returns {function} path.normalize
+ */
 export const getWorkVersionFolder = version =>
   path.normalize(
     `${path.basename(process.env.WORK_PATH)}/${snakeCase(version)}`,
   );
 
+/**
+ * Check that a work sub folder name is disposed under WORK_PATH
+ * @method module:Utils~checkVersionPathBreakout
+ * @param {string} version
+ * @throws Version x needs to be a child of WORK_PATH
+ */
 export const checkVersionPathBreakout = version => {
   const folderPath = getWorkVersionFolder(version);
 
@@ -32,6 +59,13 @@ export const checkVersionPathBreakout = version => {
   }
 };
 
+/**
+ * Write a file
+ * @method module:Utils~writeFileSync
+ * @param {string} filename
+ * @param {any} content
+ * @returns {function} fs.writeFileSync
+ */
 export const writeFileSync = (filename, content) =>
   fs.writeFileSync(filename, content, 'utf8');
 
@@ -47,6 +81,11 @@ export const isWorkVersionFolderLocked = version => {
   return fs.existsSync(filename);
 };
 
+/**
+ * Delete a work sub folder by version
+ * @method module:Utils~deleteWorkVersionFolder
+ * @param {string} version
+ */
 export const deleteWorkVersionFolder = version => {
   checkVersionPathBreakout(version);
 
@@ -57,6 +96,12 @@ export const deleteWorkVersionFolder = version => {
   }
 };
 
+/**
+ * Create or reset a work sub folder by version
+ * @method module:Utils~createOrResetWorkVersionFolder
+ * @param {string} version
+ * @throws Version x is already in use
+ */
 export const createOrResetWorkVersionFolder = version => {
   checkVersionPathBreakout(version);
 
@@ -75,17 +120,40 @@ export const createOrResetWorkVersionFolder = version => {
   }
 };
 
+/**
+ * Log a task
+ * @method module:Utils~createOrResetWorkVersionFolder
+ * @param {string} task
+ * @returns {function} Utils~log
+ */
 export const printTask = task => log(`\n\n[ ${task} ]`);
 
+/**
+ * Generate a random port within a declared range
+ * @method module:Utils~getRandomPort
+ * @param {number} minPort
+ * @param {number} maxPort
+ * @returns {Promise<function>} portfinder.getPortPromise
+ */
 export const getRandomPort = async (minPort = 33000, maxPort = 65000) => {
   const randomPort = minPort + Math.floor(Math.random() * (maxPort - minPort));
 
-  return await portfinder.getPortPromise({
+  return portfinder.getPortPromise({
     port: randomPort,
     stopPort: maxPort,
   });
 };
 
+/**
+ * Generate an array of `count` random ports within a declared range
+ * @method module:Utils~getRandomPorts
+ * @param {number} count
+ * @param {number} minPort
+ * @param {number} maxPort
+ * @param {number[]} exclude
+ * @returns {Promise<array>}
+ * @throws Too many tries to find an open port
+ */
 export const getRandomPorts = async (
   count = 1,
   minPort = 33000,
@@ -113,6 +181,13 @@ export const getRandomPorts = async (
   return ports;
 };
 
+/**
+ * Write profile configuration into the work folder
+ * @method module:Utils~storeWorkVersionConfig
+ * @param {string} version
+ * @param {object} config
+ * @returns {Promise<function>} Utils~writeFileSync
+ */
 export const storeWorkVersionConfig = (version, config) => {
   const filename = `${getWorkVersionFolder(version)}/.entourage.json`;
   const content = JSON.stringify(config, null, 2);

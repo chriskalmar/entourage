@@ -27,6 +27,17 @@ import {
 } from './util';
 import { parseYaml } from './yaml';
 
+/**
+ * @module Template
+ */
+
+/**
+ * Retrieve a profile fileName
+ * @method module:Profile~getProfileFilename
+ * @param {string} profile
+ * @returns {string}
+ * @throws Profile x not found
+ */
 const getProfileFilename = profile => {
   let profileFilename;
 
@@ -47,6 +58,22 @@ const getProfileFilename = profile => {
   return profileFilename;
 };
 
+/**
+ * Initialize a profile from the template configuration file and folder
+ *
+ * Create ProfileState in registry and work subfolder
+ * Execute prepare hook
+ * Generate docker-compose file
+ * Start docker-compose, update HAproxy config and restart it.
+ *
+ * @method module:Profile~initProfile
+ * @param {string} profile
+ * @param {object} params
+ * @param {string} version
+ * @param {boolean} [asyncMode]
+ * @emits profileCreated/<profile>/<version>
+ * @returns {object} ProfileState
+ */
 export const initProfile = async (
   profile,
   params,
@@ -185,6 +212,21 @@ export const initProfile = async (
   return getWorkVersionConfig(versionConfig);
 };
 
+/**
+ * Destroy an existing profile from the template configuration file and folder
+ *
+ * Execute beforeDestroy hook
+ * Stop and clean docker-compose
+ * Delete work subfolder and ProfileState stored in registry
+ *
+ * @method module:Profile~destroyProfile
+ * @param {string} profile
+ * @param {object} params
+ * @param {string} version
+ * @param {boolean} [asyncMode]
+ * @emits profileDestroyed/<profile>/<version>
+ * @returns {object} ProfileState
+ */
 export const destroyProfile = async (
   profile,
   params,

@@ -13,7 +13,7 @@ Create a `profiles` folder that will be shared with docker container.
 At the root of `profiles`, create a yml | yaml template like [demo-profile.yaml](./test/demo-profile.yaml).
 You can use `defaults`->`params` to declare default params that will be used to fill out template files declared in `renderTemplates`.
 
-Still at the root, create a folder that will contain your templates (`sourcePath`) and another one called <profile name> that will contain the files rendered (`targetPath`).
+Still at the root, create a folder that will contain your templates (`sourcePath`) and another one called `demo-profile` that will contain the files rendered (`targetPath`).
 
 These templates will be parsed and variables will be replaced by your default params and those that will be passed to entourage-server API.
 

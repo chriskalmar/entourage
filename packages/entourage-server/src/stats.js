@@ -2,6 +2,18 @@ import { getWorkVersionFolder } from './util';
 import { getDockerComposeStats } from './docker';
 import { getWorkVersionConfig } from './registry';
 
+/**
+ * @module Stats
+ */
+
+/**
+ * Retrieve a profile config from the registry
+ * @method module:Stats~getProfileConfig
+ * @param {string} profile
+ * @param {string} version
+ * @returns {Promise<object>}
+ * @throws Unknown profile
+ */
 export const getProfileConfig = async (profile, version) => {
   const config = getWorkVersionConfig({ profile, version });
 
@@ -12,6 +24,14 @@ export const getProfileConfig = async (profile, version) => {
   return config;
 };
 
+/**
+ * Retrieve profile stats from docker compose
+ * @method module:Stats~getProfileStats
+ * @param {string} profile
+ * @param {string} version
+ * @returns {Promise<object>}
+ * @throws Unknown profile
+ */
 export const getProfileStats = async (profile, version) => {
   const config = getWorkVersionConfig({ profile, version });
 

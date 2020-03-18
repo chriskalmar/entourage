@@ -1,6 +1,18 @@
 import { template } from 'lodash';
 import fs from 'fs';
 
+/**
+ * @module Render
+ */
+
+/**
+ * Render a template file by replacing variables
+ * @method module:Render~render
+ * @param {string} content
+ * @param {object} templateParams
+ * @param {array} escapePatterns
+ * @returns {object}
+ */
 export const render = (content, templateParams, escapePatterns = []) => {
   let escapedContent = content;
 
@@ -15,5 +27,13 @@ export const render = (content, templateParams, escapePatterns = []) => {
   return result;
 };
 
+/**
+ * Find a template file and render it by replacing variables
+ * @method module:Render~renderFile
+ * @param {string} content
+ * @param {object} templateParams
+ * @param {array} escapePatterns
+ * @returns {function} Render~render
+ */
 export const renderFile = (filePath, templateParams, escapePatterns) =>
   render(fs.readFileSync(filePath, 'utf8'), templateParams, escapePatterns);
