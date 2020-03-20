@@ -4,12 +4,25 @@ import { writeFileSync } from './util';
 import path from 'path';
 import { runDockerComposeFile, getWorkFolderMountSource } from './docker';
 
+/**
+ * @module Proxy
+ */
+
 let workFolder = '.';
 
 if (Number(process.env.ENTOURAGE_DOCKER_MODE) === 1) {
   getWorkFolderMountSource().then(folder => (workFolder = folder));
 }
 
+/**
+ * Update HAproxy configuration from the registry
+ *
+ * Populate haproxy.cfg and haproxy.docker-compose.yaml templates
+ *
+ * Save them at the root of WORK_PATH
+ *
+ * @method module:Proxy~updateProxyConfig
+ */
 export const updateProxyConfig = () => {
   const templateParams = {
     services: [],
@@ -59,6 +72,10 @@ export const updateProxyConfig = () => {
   );
 };
 
+/**
+ * Restart HAproxy docker container
+ * @method module:Proxy~restartProxy
+ */
 export const restartProxy = async () =>
   runDockerComposeFile(
     path.basename(process.env.WORK_PATH),

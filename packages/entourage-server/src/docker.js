@@ -9,12 +9,29 @@ import { renderFile } from './render';
 
 const WORK_FOLDER_MOUNT_DESTINATION = '/app/work';
 
+/**
+ * @module Docker
+ */
+
+/**
+ * Check docker-compose file presence
+ * @method module:Docker~checkDockerComposeFileExists
+ * @param {string} filePath
+ * @throws Docker compose file x not found
+ */
 export const checkDockerComposeFileExists = async filePath => {
   if (!fs.existsSync(filePath)) {
     throw new Error(`Docker compose file '${filePath}' not found`);
   }
 };
 
+/**
+ * Check docker-compose file validity
+ * @method module:Docker~validateDockerComposeFile
+ * @param {string} cwd
+ * @param {string} filePath
+ * @throws Docker compose error
+ */
 export const validateDockerComposeFile = async (cwd, filePath) => {
   checkDockerComposeFileExists(`${cwd}/${filePath}`);
 
@@ -25,6 +42,14 @@ export const validateDockerComposeFile = async (cwd, filePath) => {
   }
 };
 
+/**
+ * Update docker-compose file network and ports mapping and generate portRegistry
+ * @method module:Docker~adjustDockerComposeFile
+ * @param {string} workVersionFolder
+ * @param {string} filePath
+ * @throws At least one service needs to expose a port
+ * @returns {object} portRegistry
+ */
 export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
   const fullPath = `${workVersionFolder}/${filePath}`;
   const yaml = parseYamlFile(fullPath);
@@ -65,6 +90,13 @@ export const adjustDockerComposeFile = (workVersionFolder, filePath) => {
   return portRegistry;
 };
 
+/**
+ * Update docker-compose file
+ * @method module:Docker~updateDockerComposeFilesWithPorts
+ * @param {string} version
+ * @param {object} config
+ * @param {object} portRegistry
+ */
 const updateDockerComposeFilesWithPorts = async (
   version,
   config,
@@ -88,6 +120,18 @@ const updateDockerComposeFilesWithPorts = async (
   writeFileSync(fullPath, renderFile(fullPath, templateParams));
 };
 
+/**
+ * Validate compose-file
+ *
+ * Convert generated port to random ports
+ *
+ * Update docker-compose file
+ *
+ * @method module:Docker~processDockerTask
+ * @param {string} version
+ * @param {object} config
+ * @returns {object} portRegistry
+ */
 export const processDockerTask = async (version, config) => {
   const workVersionFolder = getWorkVersionFolder(version);
 
@@ -116,6 +160,14 @@ export const processDockerTask = async (version, config) => {
   return portRegistry;
 };
 
+/**
+ * Pull docker-compose file sources
+ *
+ * @method module:Docker~processDockerTask
+ * @param {string} version
+ * @param {object} config
+ * @throws Docker compose error
+ */
 export const pullForDockerComposeFile = async (version, config) => {
   const filePath = config.composeFile;
   const workVersionFolder = getWorkVersionFolder(version);
@@ -133,6 +185,14 @@ export const pullForDockerComposeFile = async (version, config) => {
   }
 };
 
+/**
+ * Start docker-compose file
+ *
+ * @method module:Docker~runDockerComposeFile
+ * @param {string} cwd
+ * @param {string} filePath
+ * @throws Docker compose error
+ */
 export const runDockerComposeFile = async (cwd, filePath) => {
   try {
     await compose.upAll({
@@ -145,6 +205,14 @@ export const runDockerComposeFile = async (cwd, filePath) => {
   }
 };
 
+/**
+ * Start docker-compose file from a work subfolder
+ *
+ * @method module:Docker~runWorkVersionDockerComposeFile
+ * @param {string} version
+ * @param {object} config
+ * @returns {Promise<function>} Docker~runDockerComposeFile
+ */
 export const runWorkVersionDockerComposeFile = async (version, config) => {
   const filePath = config.composeFile;
   const workVersionFolder = getWorkVersionFolder(version);
@@ -152,6 +220,57 @@ export const runWorkVersionDockerComposeFile = async (version, config) => {
   checkDockerComposeFileExists(workVersionFolder, filePath);
 
   return runDockerComposeFile(workVersionFolder, filePath);
+};
+
+/**
+ * Stop docker-compose file
+ *
+ * Optionally clean volumes, images and orphans
+ *
+ * @method module:Docker~downDockerComposeFile
+ * @param {string} cwd
+ * @param {string} filePath
+ * @param {boolean} clean
+ * @throws Docker compose error
+ */
+export const downDockerComposeFile = async (cwd, filePath, clean = false) => {
+  try {
+    const params = {
+      cwd,
+      config: filePath,
+      log: true,
+    };
+    if (clean) {
+      params.commamdOptions = '-v --rmi all --remove-orphans';
+    }
+    await compose.down(params);
+  } catch (error) {
+    throw new Error(error.err);
+  }
+};
+
+/**
+ * Start docker-compose file from a work subfolder
+ *
+ * Optionally clean volumes, images and orphans
+ *
+ * @method module:Docker~downWorkVersionDockerComposeFile
+ * @param {string} version
+ * @param {object} config
+ * @param {boolean} clean
+ * @returns {Promise<function>} Docker~downDockerComposeFile
+ */
+export const downWorkVersionDockerComposeFile = async (
+  version,
+  config,
+  clean = false,
+) => {
+  const filePath = config.composeFile;
+  const workVersionFolder = getWorkVersionFolder(version);
+
+  checkDockerComposeFileExists(workVersionFolder, filePath);
+
+  return downDockerComposeFile(workVersionFolder, filePath, clean);
 };
 
 export const createDockerNetwork = async () => {
@@ -168,9 +287,18 @@ export const createDockerNetwork = async () => {
   }
 };
 
+/**
+ * Get docker-compose stats
+ *
+ * @method module:Docker~getDockerComposeStats
+ * @param {string} cwd
+ * @param {string} filePath
+ * @returns {Promise<function>} compose.ps
+ * @throws Docker compose error
+ */
 export const getDockerComposeStats = async (cwd, filePath) => {
   try {
-    return await compose.ps({
+    return compose.ps({
       cwd,
       config: filePath,
     });
@@ -179,6 +307,13 @@ export const getDockerComposeStats = async (cwd, filePath) => {
   }
 };
 
+/**
+ * Get docker-compose mountpoint
+ *
+ * @method module:Docker~getWorkFolderMountSource
+ * @returns {string}
+ * @throws Cannot detect work folder mount point. Are you running Entourage server via docker?
+ */
 export const getWorkFolderMountSource = async () => {
   const docker = new Docker({});
   const hostname = 'entourage' || os.hostname();

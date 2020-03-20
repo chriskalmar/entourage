@@ -12,6 +12,7 @@ renderTemplates:
   targetPath: .
   files:
     - blue-space-omlette.init-db.sh
+    - blue-space-omlette.stop-db.sh
     - blue-space-omlette.docker-compose.yaml
     - blue-space-omlette.env
 
@@ -19,6 +20,11 @@ prepare:
   timeout: 90
   script:
     - . blue-space-omlette.init-db.sh
+
+beforeDestroy:
+  timeout: 90
+  script:
+    - . blue-space-omlette.stop-db.sh
 
 docker:
   composeFile: blue-space-omlette.docker-compose.yaml

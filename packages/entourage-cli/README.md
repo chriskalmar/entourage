@@ -26,6 +26,9 @@ yarn add entourage-cli
 # using the project's '.entourage.js' file as config
 entourage-cli init demo
 
+# using custom '.entourage.js' file as config
+entourage-cli init demo --file test/.entourage.js
+
 # meanwhile perform regular CI tasks
 # like linting, building and so on
 

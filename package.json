@@ -1,11 +1,21 @@
 {
   "name": "entourage",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Environment bootstrapping for integration tests",
   "scripts": {
     "lint": "eslint .",
     "lint-fix": "eslint . --fix",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "docs:modules:cli": "cp ./packages/entourage-cli/README.md ./docs/cli/1.md ; ./node_modules/.bin/jsdoc2md ./packages/entourage-cli/src/* > ./docs/cli/2.md",
+    "docs:concat:cli": "./node_modules/.bin/concat-md docs/cli > ./docs/cli/README.md ; rm ./docs/cli/1.md ; rm ./docs/cli/2.md",
+    "docs:cli": "npm run docs:modules:cli ; npm run docs:concat:cli",
+    "docs:modules:server": "cp ./packages/entourage-server/README.md ./docs/server/1.md ; ./node_modules/.bin/jsdoc2md ./packages/entourage-server/src/* > ./docs/server/2.md",
+    "docs:concat:server": "./node_modules/.bin/concat-md docs/server > ./docs/server/README.md ; rm ./docs/server/1.md ; rm ./docs/server/2.md",
+    "docs:server": "npm run docs:modules:server ; npm run docs:concat:server",
+    "docs:readme": "cp ./README.md ./docs/readme/README.md",
+    "docs:dev": "npm run docs:readme ; npm run docs:cli ; npm run docs:server ; ./node_modules/.bin/vuepress dev docs",
+    "docs:build": "npm run docs:readme ; npm run docs:cli ; npm run docs:server ; NODE_ENV=production ./node_modules/.bin/vuepress build docs",
+    "docs:serve": "light-server -s public -p 7000 --servePrefix /entourage/"
   },
   "lint-staged": {
     "*.js": "eslint"
@@ -33,20 +43,28 @@
     "@babel/preset-env": "^7.7.6",
     "@babel/runtime": "^7.7.6",
     "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
+    "babel-jest": "^25.0.1",
     "codecov": "^3.6.1",
-    "eslint": "^6.7.2",
-    "eslint-config-prettier": "^6.7.0",
-    "husky": "^3.1.0",
-    "jest": "^24.9.0",
-    "lerna": "^3.19.0",
-    "lint-staged": "^9.5.0",
+    "concat-md": "^0.3.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "husky": "^4.2.3",
+    "jest": "^25.0.1",
+    "jsdoc-to-markdown": "^5.0.3",
+    "lerna": "^3.20.1",
+    "light-server": "^2.6.4",
+    "lint-staged": "^10.0.0",
     "nodemon": "^2.0.1",
     "prettier": "^1.19.1",
     "prettier-eslint": "^9.0.1",
-    "rimraf": "^3.0.0"
+    "rimraf": "^3.0.0",
+    "vuepress": "^1.4.0"
   },
   "dependencies": {
     "entourage-server": "file:packages/entourage-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chriskalmar/entourage"
   }
 }

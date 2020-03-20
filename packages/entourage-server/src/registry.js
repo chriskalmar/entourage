@@ -4,6 +4,15 @@ import { log } from 'util';
 
 export const registry = {};
 
+/**
+ * @module Registry
+ */
+
+/**
+ * Save a profile configuration in the registry
+ * @method module:Registry~addWorkVersionConfig
+ * @param {object} config
+ */
 export const addWorkVersionConfig = config => {
   const { profile, version } = config;
   const key = `${profile}-${version}`;
@@ -11,6 +20,12 @@ export const addWorkVersionConfig = config => {
   registry[key] = { ...config };
 };
 
+/**
+ * Find a profile configuration in the registry
+ * @method module:Registry~getWorkVersionConfig
+ * @param {object} config
+ * @returns {object}
+ */
 export const getWorkVersionConfig = config => {
   const { profile, version } = config;
   const key = `${profile}-${version}`;
@@ -18,6 +33,22 @@ export const getWorkVersionConfig = config => {
   return registry[key];
 };
 
+/**
+ * Remove a profile configuration in the registry
+ * @method module:Registry~removeWorkVersionConfig
+ * @param {object} config
+ */
+export const removeWorkVersionConfig = config => {
+  const { profile, version } = config;
+  const key = `${profile}-${version}`;
+
+  delete registry[key];
+};
+
+/**
+ * Initialize the registry from existing work subfolder
+ * @method module:Registry~initRegistry
+ */
 export const initRegistry = () => {
   const workPath = path.basename(process.env.WORK_PATH);
 

@@ -18,5 +18,6 @@ RUN npm install \
   && npm run build
 
 EXPOSE 5858
+EXPOSE 1883
 
 CMD npm run start

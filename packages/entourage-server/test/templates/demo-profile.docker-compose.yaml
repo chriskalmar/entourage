@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  test:
+    hostname: <%= HOST %>
+    env_file: <%= __PROFILE %>.env
+    environment:
+      - NODE_ENV=<%= NODE_ENV %>
+      - SERVER_LOGGER_LEVEL=4
+    build:
+      context: https://framagit.org/aloes/device-manager.git#master
+      dockerfile: ./config/docker/broker.dockerfile
+    ports:
+      - '<%= MQTT_PORT %>:<%= MQTT_PORT %>'
+      - '<%= WS_PORT %>:<%= WS_PORT %>'

@@ -1,9 +1,5 @@
 import yargs from 'yargs';
-import { init, env, wait } from './command';
-
-const fn = argv => {
-  console.log(JSON.stringify(argv, null, 2));
-};
+import { init, destroy, env, wait } from './command';
 
 const versionNameParam = _yargs =>
   _yargs.positional('versionName', {
@@ -51,7 +47,7 @@ const argv = yargs
     _yargs => {
       versionNameParam(_yargs);
     },
-    fn,
+    destroy,
   )
   .options({
     file: {
