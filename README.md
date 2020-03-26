@@ -5,7 +5,7 @@
   />
 </p> -->
 
-# Entourage
+# Entourage ![CI](https://github.com/chriskalmar/entourage/workflows/CI/badge.svg)
 
 Environment bootstrapping for integration tests
 
