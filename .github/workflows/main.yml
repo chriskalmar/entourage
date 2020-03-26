@@ -23,7 +23,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: npm install
+        run: npm install && npm -g install jest
         
       - name: Test server 
         run: cd packages/entourage-server/ && npm run test
