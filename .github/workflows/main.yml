@@ -8,7 +8,31 @@ jobs:
 
     steps:
       - uses: actions/checkout@master
+        
+      - name: Setup Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Test server 
+        run: cd packages/entourage-server/ && npm run test
+        
+      - name: Test CLI
+        run: cd ../entourage-cli/ && npm run test
+        
       - name: Publish to Registry
+        if: github.ref == 'refs/heads/master'
         uses: elgohr/Publish-Docker-Github-Action@b82ad077c06f24a94fc90a2627e0e11d9f55a49f
         with:
           name: chriskalmar/entourage
