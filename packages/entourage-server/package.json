@@ -53,7 +53,7 @@
     "docker-cli-js": "^2.6.0",
     "docker-compose": "^0.23.1",
     "dotenv": "^8.2.0",
-    "execa": "^3.4.0",
+    "execa": "^4.0.0",
     "graphql-mqtt-subscriptions": "^1.2.0",
     "graphql-type-json": "^0.3.1",
     "graphql-yoga": "^1.18.3",
