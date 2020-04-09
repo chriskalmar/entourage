@@ -34,5 +34,5 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Publish
+      - name: Publish to npm
         run: cd packages/entourage-cli/ && npm publish --access public
