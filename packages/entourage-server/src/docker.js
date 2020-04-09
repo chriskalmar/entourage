@@ -2,7 +2,12 @@ import * as compose from 'docker-compose';
 import fs from 'fs';
 import os from 'os';
 import _ from 'lodash';
-import { getWorkVersionFolder, getRandomPorts, writeFileSync } from './util';
+import {
+  getWorkVersionFolder,
+  getRandomPorts,
+  writeFileSync,
+  isEnvFlagSet,
+} from './util';
 import { parseYamlFile, serializeYamlFile } from './yaml';
 import { Docker } from 'docker-cli-js';
 import { renderFile } from './render';
@@ -316,7 +321,9 @@ export const getDockerComposeStats = async (cwd, filePath) => {
  */
 export const getWorkFolderMountSource = async () => {
   const docker = new Docker({});
-  const hostname = 'entourage' || os.hostname();
+  const hostname = isEnvFlagSet('ENTOURAGE_DOCKER_MODE')
+    ? os.hostname()
+    : 'entourage';
 
   const result = await docker.command(`inspect ${hostname}`);
   const mounts = _.get(result, 'object[0].Mounts');
