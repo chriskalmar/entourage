@@ -194,3 +194,11 @@ export const storeWorkVersionConfig = (version, config) => {
 
   writeFileSync(filename, content);
 };
+
+/**
+ * Check if an environment flag is set to TRUE
+ * @method module:Utils~isEnvFlagSet
+ * @param  {string} process.env[name]
+ * @returns {boolean}
+ */
+export const isEnvFlagSet = name => Number(process.env[name]) === 1;
