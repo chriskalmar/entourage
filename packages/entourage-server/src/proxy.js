@@ -1,6 +1,6 @@
 import { registry } from './registry';
 import { renderFile } from './render';
-import { writeFileSync } from './util';
+import { writeFileSync, isEnvFlagSet } from './util';
 import path from 'path';
 import { runDockerComposeFile, getWorkFolderMountSource } from './docker';
 
@@ -10,7 +10,7 @@ import { runDockerComposeFile, getWorkFolderMountSource } from './docker';
 
 let workFolder = '.';
 
-if (Number(process.env.ENTOURAGE_DOCKER_MODE) === 1) {
+if (isEnvFlagSet('ENTOURAGE_DOCKER_MODE')) {
   getWorkFolderMountSource().then(folder => (workFolder = folder));
 }
 
