@@ -154,9 +154,10 @@ export const wait = async argv => {
   });
 
   const timeoutFn = setTimeout(() => {
-    eventBus.removeListener(eventName);
-    client.end(true);
-    timedout = true;
+    eventBus.removeListener(eventName, () => {
+      client.end(true);
+      timedout = true;
+    });
   }, config.timeout);
 
   while (!ready && !timedout) {
