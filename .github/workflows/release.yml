@@ -33,7 +33,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        run: cd packages/entourage-cli/ && npm install && npm -g install jest
+        working-directory: ./packages/entourage-cli
+        run: npm install && npm -g install jest
 
       - name: Publish to npm
-        run: cd packages/entourage-cli/ && npm publish --access public
+        working-directory: ./packages/entourage-cli
+        run: npm publish --access public

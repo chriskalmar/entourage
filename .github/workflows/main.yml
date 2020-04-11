@@ -28,7 +28,8 @@ jobs:
         run: npm install && npm -g install jest
 
       - name: Test server
-        run: cd packages/entourage-server/ && npm run test
+        working-directory: ./packages/entourage-server
+        run: npm run test
 
       #       - name: Test CLI
       #         run: cd packages/entourage-cli/ && npm run test
