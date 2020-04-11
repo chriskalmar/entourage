@@ -3,6 +3,7 @@ import path from 'path';
 import { request } from './request';
 import { subscribe, eventBus } from './subscribe';
 import { printProgressDots, sleep } from './util';
+import { toUpper } from 'lodash';
 
 const waitRequestInterval = 5000;
 const defaultTimeout = 120000;
@@ -264,7 +265,7 @@ export const env = async argv => {
 
   for (const [serviceName, portMap] of Object.entries(ports)) {
     for (const [definedPort, assignedPort] of Object.entries(portMap)) {
-      const envVar = `${prefix}${serviceName}_${definedPort}`;
+      const envVar = toUpper(`${prefix}${serviceName}_${definedPort}`);
       console.log(`export ${envVar}=${assignedPort}`);
     }
   }
