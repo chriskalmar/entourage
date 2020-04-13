@@ -52,7 +52,7 @@ export const subscribe = ({ config, eventName }) => {
     console.log(`MQTT - client error : ${err && err.message}`);
   });
 
-  const pubsub = new MQTTPubSub(client);
+  const pubsub = new MQTTPubSub({ client });
 
   // const subId = await
   pubsub.subscribe(eventName, (...args) => {
