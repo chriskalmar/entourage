@@ -1,6 +1,6 @@
 import { GraphQLServer } from 'graphql-yoga';
 import { resolvers, typeDefs } from './graphql';
-import pubsub from './pubsub';
+import { pubsub } from './pubsub';
 import { log } from './util';
 
 /**
@@ -40,6 +40,7 @@ export const initServer = () => {
     resolvers,
     context: { pubsub },
   });
+
   server.start(serverOptions, () =>
     log(`Server is running on port ${process.env.PORT} ... 🚀`),
   );
