@@ -34,13 +34,13 @@ export const initBroker = () => {
     },
   );
 
-  broker.on('client', client => {
-    log(`MQTT onConnect ${client ? client.id : null}`);
-  });
+  // broker.on('client', client => {
+  //   log(`MQTT onConnect ${client ? client.id : null}`);
+  // });
 
-  broker.on('clientDisconnect', client => {
-    log(`MQTT onDisconnect ${client ? client.id : null}`);
-  });
+  // broker.on('clientDisconnect', client => {
+  //   log(`MQTT onDisconnect ${client ? client.id : null}`);
+  // });
 
   broker.on('publish', (packet, client) => {
     if (packet.topic.startsWith('$SYS')) {

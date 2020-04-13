@@ -7,7 +7,6 @@ import {
   downWorkVersionDockerComposeFile,
 } from './docker';
 import { updateProxyConfig, restartProxy } from './proxy';
-import pubsub from './pubsub';
 import { renderFile } from './render';
 import { executeScripts } from './script';
 import {
@@ -79,6 +78,7 @@ export const initProfile = async (
   params,
   version,
   asyncMode = true,
+  { pubsub },
 ) => {
   const profileFilename = getProfileFilename(profile);
 
@@ -232,6 +232,7 @@ export const destroyProfile = async (
   params,
   version,
   asyncMode = true,
+  { pubsub },
 ) => {
   printTask('destroyProfile - Work in progress');
   const versionConfig = await getProfileConfig(profile, version);

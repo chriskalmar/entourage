@@ -13,14 +13,12 @@ client.on('error', err => {
   log(`MQTT - client error : ${err && err.message}`);
 });
 
-// client.on('connect', () => {
-//   log('MQTT - clientConnected');
-// });
+client.on('connect', () => {
+  log('MQTT - clientConnected');
+});
 
-// client.on('offline', () => {
-//   log('MQTT - clientDisconnected');
-// });
+client.on('offline', () => {
+  log('MQTT - clientDisconnected');
+});
 
-const pubsub = new MQTTPubSub(client);
-
-export default pubsub;
+export const pubsub = new MQTTPubSub({ client });

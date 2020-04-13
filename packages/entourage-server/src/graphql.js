@@ -153,10 +153,10 @@ export const resolvers = {
     stats: ({ profile, version }) => getProfileStats(profile, version),
   },
   Mutation: {
-    initProfile: (_, { profile, params, version, asyncMode }) =>
-      initProfile(profile, params, version, asyncMode),
-    destroyProfile: (_, { profile, params, version, asyncMode }) =>
-      destroyProfile(profile, params, version, asyncMode),
+    initProfile: (_, { profile, params, version, asyncMode }, { pubsub }) =>
+      initProfile(profile, params, version, asyncMode, { pubsub }),
+    destroyProfile: (_, { profile, params, version, asyncMode }, { pubsub }) =>
+      destroyProfile(profile, params, version, asyncMode, { pubsub }),
   },
   Subscription: {
     profileCreated: {
