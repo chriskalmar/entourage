@@ -270,7 +270,7 @@ export const downWorkVersionDockerComposeFile = async (
   config,
   clean = false,
 ) => {
-  const filePath = config.composeFile;
+  const filePath = config.docker.composeFile;
   const workVersionFolder = getWorkVersionFolder(version);
 
   checkDockerComposeFileExists(workVersionFolder, filePath);
