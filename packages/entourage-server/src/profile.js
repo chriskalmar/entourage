@@ -215,7 +215,7 @@ export const initProfile = async (
 /**
  * Destroy an existing profile from the template configuration file and folder
  *
- * Execute beforeDestroy hook
+ * Execute beforeDestroy and afterDestroy hooks
  * Stop and clean docker-compose
  * Delete work subfolder and ProfileState stored in registry
  *
