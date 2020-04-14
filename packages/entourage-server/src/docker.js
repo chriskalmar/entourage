@@ -1,5 +1,6 @@
 import * as compose from 'docker-compose';
 import fs from 'fs';
+import path from 'path';
 import os from 'os';
 import _ from 'lodash';
 import {
@@ -199,11 +200,16 @@ export const pullForDockerComposeFile = async (version, config) => {
  * @throws Docker compose error
  */
 export const runDockerComposeFile = async (cwd, filePath) => {
+  const composeProjectName = path.basename(
+    path.dirname(path.resolve(filePath)),
+  );
+
   try {
     await compose.upAll({
       cwd,
       config: filePath,
       log: true,
+      commamdOptions: `-p ${composeProjectName}`,
     });
   } catch (error) {
     throw new Error(error.err);
