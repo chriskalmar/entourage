@@ -200,16 +200,14 @@ export const pullForDockerComposeFile = async (version, config) => {
  * @throws Docker compose error
  */
 export const runDockerComposeFile = async (cwd, filePath) => {
-  const composeProjectName = path.basename(
-    path.dirname(path.resolve(filePath)),
-  );
+  const composeProjectName = path.basename(path.resolve(cwd));
 
   try {
     await compose.upAll({
       cwd,
       config: filePath,
       log: true,
-      commamdOptions: `-p ${composeProjectName}`,
+      composeOptions: ['-p', `${composeProjectName}`],
     });
   } catch (error) {
     throw new Error(error.err);
