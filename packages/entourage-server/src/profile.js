@@ -245,7 +245,7 @@ export const destroyProfile = async (
   };
   const renderedProfile = renderFile(profileFilename, templateParams);
   const profileYaml = parseYaml(renderedProfile);
-  const { beforeDestroy } = profileYaml;
+  const { beforeDestroy, afterDestroy } = profileYaml;
 
   const runAsync = async () => {
     if (beforeDestroy) {
@@ -268,6 +268,22 @@ export const destroyProfile = async (
     printTask('Stopping docker-compose');
     await downWorkVersionDockerComposeFile(version, versionConfig, true);
 
+    if (afterDestroy) {
+      printTask('Executing \'afterDestroy\'');
+
+      const afterDestroyScriptTimeout = afterDestroy.timeout
+        ? Number(afterDestroy.timeout) * 1000
+        : 60000;
+
+      if (afterDestroy.script) {
+        await executeScripts(
+          version,
+          afterDestroy.script,
+          templateParams,
+          afterDestroyScriptTimeout,
+        );
+      }
+    }
     // useless with deleteWorkVersionFolder ?
     // if (renderTemplates) {
     //   printTask('Deleting rendered templates');
