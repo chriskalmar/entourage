@@ -150,14 +150,10 @@ export const wait = async argv => {
   eventBus.addListener(eventName, data => {
     // console.log('message received :', args);
     ready = data.ready;
-    client.end(true);
   });
 
   const timeoutFn = setTimeout(() => {
-    eventBus.removeListener(eventName, () => {
-      client.end(true);
-      timedout = true;
-    });
+    timedout = true;
   }, config.timeout);
 
   while (!ready && !timedout) {
@@ -167,6 +163,8 @@ export const wait = async argv => {
 
   stopProgressDots();
   clearTimeout(timeoutFn);
+  eventBus.removeAllListeners(eventName);
+  client.end(true);
 
   if (!ready) {
     if (timedout) {
