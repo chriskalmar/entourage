@@ -76,7 +76,7 @@
     "axios": "^0.19.0",
     "graphql-mqtt-subscriptions": "^1.2.0",
     "lodash": "^4.17.15",
-    "mqtt": "^3.0.0",
+    "mqtt": "^4.0.0",
     "yargs": "^15.0.2"
   }
 }
