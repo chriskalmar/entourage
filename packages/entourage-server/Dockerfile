@@ -1,4 +1,4 @@
-FROM node:13.5.0-buster
+FROM node:13.14.0-buster
 
 LABEL maintainer="Chris Kalmar <christian.kalmar@gmail.com>"
 
