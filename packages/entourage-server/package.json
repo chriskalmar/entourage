@@ -49,7 +49,7 @@
   "author": "Chris Kalmar <christian.kalmar@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "aedes": "^0.40.1",
+    "aedes": "^0.42.0",
     "docker-cli-js": "^2.6.0",
     "docker-compose": "^0.23.1",
     "dotenv": "^8.2.0",
