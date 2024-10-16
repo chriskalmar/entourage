@@ -36,7 +36,7 @@ jobs:
 
       - name: Publish to Registry
         if: startsWith(github.ref, 'refs/tags/') || github.ref == 'refs/heads/master'
-        uses: elgohr/Publish-Docker-Github-Action@b82ad077c06f24a94fc90a2627e0e11d9f55a49f
+        uses: elgohr/Publish-Docker-Github-Action@8a77ff7e106a82f06cefb2670b851ff562c53079
         with:
           name: chriskalmar/entourage
           username: ${{ secrets.DOCKER_USERNAME }}
