@@ -55,7 +55,7 @@
     "lerna": "3.20.2",
     "light-server": "2.6.4",
     "lint-staged": "10.0.8",
-    "nodemon": "2.0.2",
+    "nodemon": "2.0.22",
     "prettier": "1.19.1",
     "prettier-eslint": "9.0.1",
     "rimraf": "3.0.0",
