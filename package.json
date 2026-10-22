@@ -46,7 +46,7 @@
     "babel-eslint": "10.1.0",
     "babel-jest": "25.2.3",
     "codecov": "3.6.5",
-    "concat-md": "0.3.2",
+    "concat-md": "0.5.1",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.10.1",
     "husky": "4.2.3",
